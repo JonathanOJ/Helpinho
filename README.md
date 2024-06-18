@@ -2,9 +2,10 @@
 
 ![Projeto fictício! Seu código será usado apenas para avaliação, em hipótese alguma o usaremos internamente.](/assets/alert.svg)
 
-Helpinho é uma plataforma onde pessoas podem ajudar e pedir ajuda. Você pode se cadastrar e criar o seu helpinho, onde outras pessoas lhe daram todo apoia que precisar.
+Helpinho é uma plataforma onde pessoas podem ajudar e pedir ajuda. Você pode se cadastrar e criar o seu helpinho, onde outras pessoas lhe darão todo o apoio que precisar.
 
-Você deve criar uma plataforma simples, sendo possível se cadastra, fazer login, criar um helpinho, ver todos os helpinhos criados, ver mais informações de um helpinho. Na tela com todos os helpinhos, deve ser possivel fazer buscas. Ordenação e filtro serão bem vindos.
+Você deve criar uma plataforma simples, sendo possível cadastrar-se, fazer login, criar um helpinho, ver todos os helpinhos criados, ver mais informações de um helpinho.
+Na tela com todos os helpinhos, deve ser possivel fazer buscas. Ordenação e filtros serão bem vindos.
 
 Abaixo listamos todas funcionalidades que esperamos vê, bem como as stacks:
 
@@ -13,14 +14,14 @@ Abaixo listamos todas funcionalidades que esperamos vê, bem como as stacks:
 - **Angular v17+**
 - **Tailwind**
 
-Use o angular na versão 17, ou mais recente. Sinta-se livre para usar libs e outros recursos que desejar. Todas as telas básicas estão no figma para que você possa desenvolvelas, fique a vontade para criar mais telas caso ache necessários.
+Use o angular na versão 17, ou mais recente. Sinta-se livre para usar libs e outros recursos que desejar. Todas as telas básicas estão no figma para que você possa desenvolvê-las, fique à vontade para criar mais telas caso considere necessário.
 
 Esperamos as funcionalidades:
 
 1. **Página de Listagem de Helpinhos**:
 
    - Listar todos os helpinhos criados.
-   - Função de pesquisa (opcional ter filtros e ordenamento).
+   - Função de pesquisa (opcional ter filtros e ordenação).
 
 2. **Página de Criação de Helpinho**:
 
@@ -31,7 +32,7 @@ Esperamos as funcionalidades:
 3. **Página de Visualização de Helpinho**:
 
    - Mostrar todos os dados não sensíveis do helpinho e do criador.
-   - Mostrar valores recebidos a até o momento (opcional realtime).
+   - Mostrar valores recebidos até o momento (opcional realtime).
 
 4. **Página de Autenticação**:
 
@@ -66,9 +67,9 @@ Esperamos as funcionalidades:
    ```
 
 2. **Desenvolva sua aplicação**
-   Dentro de cada pasta, `frontend` e `backend`, crie sua aplicação e documente o passo a passo para execução e uma breve esplicação do seu desenvolvimento. Caso seja necessário, crie um outro arquivo .md na raiz, mas não altere este arquivo README.md
+   Dentro de cada pasta, `frontend` e `backend`, crie sua aplicação e documente o passo a passo para execução e uma breve explicação do seu desenvolvimento. Caso necessário, crie um outro arquivo .md na raíz, mas não altere este arquivo README.md
 
-3. **Dcumente sua aplicação**
+3. **Documente sua aplicação**
    Crie uma breve documentação do seu código, explicando sua tomada de decisão e qualquer ponto que ache relevante documentar
 
 4. **Teste sua aplicação** (opcional)
@@ -76,14 +77,14 @@ Esperamos as funcionalidades:
 
 ## Links
 
-- **Figam**: [Link para o prototipo no figma](https://www.figma.com/design/0E94SZ4NUCkU6Oc5er2jzK/Helpinho---Frontend-test?node-id=18-2022&t=FrRW3RVj9UYuqUwN-1)
+- **Figma**: [Link para o protótipo no Figma](https://www.figma.com/design/0E94SZ4NUCkU6Oc5er2jzK/Helpinho---Frontend-test?node-id=18-2022&t=FrRW3RVj9UYuqUwN-1)
 - **Serverless**: [Serverless framework website](https://www.serverless.com/)
 - **Angular**: [Angular framework website](https://angular.dev/)
 - **Tailwind**: [Tailwind website](https://tailwindcss.com/)
 
 ## Sobre a Vaga
 
-**Desenvolvedor Pleno Front End/Full Stack**
+**Desenvolvedor Pleno Full Stack**
 
 Estamos em busca de um Desenvolvedor Pleno Full Stack talentoso e experiente e principalmente com muita garra, para se juntar ao nosso time. O candidato ideal deverá ter habilidades avançadas em desenvolvimento serverless e um sólido conhecimento das ferramentas e tecnologias listadas. Se você é apaixonado por criar soluções eficientes e escaláveis, essa oportunidade é para você!
 
@@ -130,12 +131,5 @@ Junte-se a um projeto revolucionário que elimina a complexidade do gerenciament
 - Experiência com arquitetura orientada a eventos.
 - Habilidade para trabalhar em um ambiente ágil **(Scrum/Kanban)**.
 - Experiência com ferramentas de **CI/CD**.
-
-### Oferecemos:
-
-- Ambiente de trabalho dinâmico e desafiador.
-- Oportunidade de crescimento e desenvolvimento profissional.
-- Participação em projetos inovadores e de grande impacto.
-- Benefícios competitivos e salário compatível com o mercado.
 
 Se você possui o perfil descrito e está pronto para novos desafios, envie seu currículo e portfólio para o nosso e-mail de recrutamento. Venha fazer parte de uma equipe que valoriza a inovação e a excelência no desenvolvimento de software!
