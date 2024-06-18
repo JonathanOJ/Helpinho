@@ -1,4 +1,4 @@
-![Legalbox+ | Helpinho](/assets/header.svg)
+![LBCA | Helpinho](/assets/header.svg)
 
 ![Projeto fictício! Seu código será usado apenas para avaliação, em hipótese alguma o usaremos internamente.](/assets/alert.svg)
 
@@ -62,7 +62,7 @@ Esperamos as funcionalidades:
 1. **Clone o Repositório**:
 
    ```bash
-   git clone https://github.com/WilkerLopesLBCA/Helpinho.git
+   git clone https://github.com/LBCA-TI/Helpinho.git
    ```
 
 2. **Desenvolva sua aplicação**
