@@ -2,7 +2,7 @@
 
 ![Projeto fictício! Seu código será usado apenas para avaliação, em hipótese alguma o usaremos internamente.](/assets/alert.svg)
 
-Helpinho é uma plataforma onde pessoas podem ajudar a e pedir ajuda. Você pode se cadastrar e criar sua helpinho, onde outras pessoas lhe daram todo apoia que precisar.
+Helpinho é uma plataforma onde pessoas podem ajudar e pedir ajuda. Você pode se cadastrar e criar o seu helpinho, onde outras pessoas lhe daram todo apoia que precisar.
 
 Você deve criar uma plataforma simples, sendo possível se cadastra, fazer login, criar um helpinho, ver todos os helpinhos criados, ver mais informações de um helpinho. Na tela com todos os helpinhos, deve ser possivel fazer buscas. Ordenação e filtro serão bem vindos.
 
@@ -68,18 +68,29 @@ Esperamos as funcionalidades:
 2. **Desenvolva sua aplicação**
    Dentro de cada pasta, `frontend` e `backend`, crie sua aplicação e documente o passo a passo para execução e uma breve esplicação do seu desenvolvimento. Caso seja necessário, crie um outro arquivo .md na raiz, mas não altere este arquivo README.md
 
-## Links úteis
+3. **Dcumente sua aplicação**
+   Crie uma breve documentação do seu código, explicando sua tomada de decisão e qualquer ponto que ache relevante documentar
 
-**Figam**
-[Link para o prototipo no figma](https://www.figma.com/design/0E94SZ4NUCkU6Oc5er2jzK/Helpinho-desing?node-id=18-2017&t=DWa99dwxEyruiJIN-1)
+4. **Teste sua aplicação** (opcional)
+   Garanta que sua aplicação irá funcionar corretamente, faça testes unitários para garatir que cada parte da sua aplicação está funcionando corretamente
+
+## Links
+
+- **Figam**: [Link para o prototipo no figma](https://www.figma.com/design/0E94SZ4NUCkU6Oc5er2jzK/Helpinho---Frontend-test?node-id=18-2022&t=FrRW3RVj9UYuqUwN-1)
+- **Serverless**: [Serverless framework website](https://www.serverless.com/)
+- **Angular**: [Angular framework website](https://angular.dev/)
+- **Tailwind**: [Tailwind website](https://tailwindcss.com/)
 
 ## Sobre a Vaga
 
-Estamos em busca de um Desenvolvedor Pleno Full Stack talentoso e experiente, com forte foco em front end, para se juntar ao nosso time. Se você é apaixonado por criar soluções eficientes e escaláveis, adora desafios e possui as habilidades descritas, essa oportunidade é para você!
-
-## Descrição da Vaga
-
 **Desenvolvedor Pleno Front End/Full Stack**
+
+Estamos em busca de um Desenvolvedor Pleno Full Stack talentoso e experiente e principalmente com muita garra, para se juntar ao nosso time. O candidato ideal deverá ter habilidades avançadas em desenvolvimento serverless e um sólido conhecimento das ferramentas e tecnologias listadas. Se você é apaixonado por criar soluções eficientes e escaláveis, essa oportunidade é para você!
+
+### Nosso projeto
+
+Descubra uma plataforma serverless descentralizada e multi-cliente que está redefinindo os limites da tecnologia! Projetada para empresas que buscam escalabilidade e eficiência, ela oferece uma infraestrutura robusta e flexível, permitindo que você se concentre na criação de soluções inovadoras. Com uma arquitetura aberta, a plataforma proporciona um ambiente fértil para desenvolvedores explorarem novas ideias e enfrentarem desafios técnicos de ponta.
+Junte-se a um projeto revolucionário que elimina a complexidade do gerenciamento de servidores, garante segurança robusta e reduz custos operacionais. Aqui, você terá a oportunidade de trabalhar com tecnologias de última geração e impulsionar o futuro da inovação. Venha transformar o mercado e criar soluções extraordinárias conosco!
 
 ### Responsabilidades:
 
@@ -98,23 +109,27 @@ Estamos em busca de um Desenvolvedor Pleno Full Stack talentoso e experiente, co
 ### Requisitos:
 
 - Experiência comprovada em desenvolvimento full stack utilizando **Node.js** e **Angular**.
-- Conhecimento prático em desenvolvimento serverless com **AWS Lambda**.
-- Experiência com **AWS DynamoDB**, **AWS SQS** e **AWS Athena**.
 - Habilidades em **TailwindCSS** para estilização de interfaces.
 - Familiaridade com padrões de desenvolvimento de software.
-- Experiência com arquitetura orientada a eventos.
 - Compreensão de conceitos de **Domain-Driven Design (DDD)**.
 - Capacidade de trabalhar de forma colaborativa em um ambiente ágil.
 - Boas práticas no desenvolvimento web (HTML, SCSS, TypeScript).
 
 ### Diferenciais:
 
-- Certificações **AWS**.
 - Experiência anterior em projetos utilizando todas as ferramentas listadas.
 - Habilidade em resolver problemas de forma criativa e eficiente.
 - Excelentes habilidades de comunicação e trabalho em equipe.
 - Experiência com testes unitários e integrados, garantindo a qualidade e a robustez das aplicações desenvolvidas.
 - Conhecimento em **Angular Signals** e gerenciamento de estado.
+
+### Desejável
+
+- Experiência com **AWS DynamoDB**, **AWS SQS** e **AWS Athena**.
+- Conhecimento prático em desenvolvimento Serverless com **AWS Lambda**.
+- Experiência com arquitetura orientada a eventos.
+- Habilidade para trabalhar em um ambiente ágil **(Scrum/Kanban)**.
+- Experiência com ferramentas de **CI/CD**.
 
 ### Oferecemos:
 
@@ -122,3 +137,5 @@ Estamos em busca de um Desenvolvedor Pleno Full Stack talentoso e experiente, co
 - Oportunidade de crescimento e desenvolvimento profissional.
 - Participação em projetos inovadores e de grande impacto.
 - Benefícios competitivos e salário compatível com o mercado.
+
+Se você possui o perfil descrito e está pronto para novos desafios, envie seu currículo e portfólio para o nosso e-mail de recrutamento. Venha fazer parte de uma equipe que valoriza a inovação e a excelência no desenvolvimento de software!
