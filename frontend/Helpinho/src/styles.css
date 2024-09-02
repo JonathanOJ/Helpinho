@@ -1,0 +1,52 @@
+@import "primeicons/primeicons.css";
+
+@layer tailwind-base, primeng, tailwind-utilities;
+
+@layer tailwind-base {
+	@tailwind base;
+}
+
+@layer primeng;
+
+@layer tailwind-utilities {
+	@tailwind components;
+	@tailwind utilities;
+}
+
+@layer utilities {
+	.truncated-text-2l {
+		display: -webkit-box;
+		-webkit-box-orient: vertical;
+		-webkit-line-clamp: 2;
+		line-clamp: 2;
+		line-height: 1.5em;
+	}
+	.truncated-text-5l {
+		display: -webkit-box;
+		-webkit-box-orient: vertical;
+		-webkit-line-clamp: 5;
+		line-clamp: 5;
+		line-height: 1.5em;
+	}
+	.truncated-text-9l {
+		display: -webkit-box;
+		-webkit-box-orient: vertical;
+		-webkit-line-clamp: 9;
+		line-clamp: 9;
+		line-height: 1.5em;
+	}
+}
+
+html {
+	font-family: "Work Sans" !important;
+	background-color: #f9fafb !important;
+}
+
+@keyframes slide-infinite {
+	0% {
+		transform: translateX(0%);
+	}
+	100% {
+		transform: translateX(-50%);
+	}
+}

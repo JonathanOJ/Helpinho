@@ -1,0 +1,42 @@
+<header class="flex items-center justify-between h-[80px]">
+	<img class="hidden md:flex" src="./../../../assets/images/Logo Horizontal.png" alt="Logo Helpinho" />
+	<img class="md:hidden" src="./../../../assets/images/handsSoloLogo.png" alt="Logo Helpinho" />
+	<p-tabView class="h-[60px] hidden md:flex" [(activeIndex)]="activeIndex" (click)="tabChange()">
+		<p-tabPanel header="Home"> </p-tabPanel>
+		<p-tabPanel header="Pesquisa"> </p-tabPanel>
+		<p-tabPanel header="Sobre"> </p-tabPanel>
+		@if( userSession &&userSession.id){
+
+		<p-tabPanel header="Meus helpinhos"> </p-tabPanel>
+		}
+	</p-tabView>
+	@if(!userSession){
+	<div class="flex gap-3">
+		<p-button
+			size="large"
+			[rounded]="true"
+			[outlined]="true"
+			label="Registre-se grátis"
+			(click)="redirectToLogin('register')"
+		/>
+		<p-button size="large" [rounded]="true" label="Login" (click)="redirectToLogin('login')" />
+	</div>
+	} @else {
+	<section class="flex items-center gap-2 cursor-pointer">
+		@if(userSession.image){
+		<img [src]="userSession.image" alt="User profile image of {{ userSession.username }}" />
+		} @else {
+		<span class="w-8 h-8 flex justify-center items-center bg-[#ec4899] text-white rounded-full">{{
+			userSession.username[0]
+		}}</span>
+		}
+		<div class="hidden md:flex flex-col">
+			<span class="text-sm font-semibold text-[#4F4F4F]">
+				{{ userSession.username }}
+			</span>
+			<span class="text-[#5D5D5D] text-xs">{{ userSession.email }}</span>
+		</div>
+		<p-button icon="pi pi-sign-out" [rounded]="true" (click)="signOut()" />
+	</section>
+	}
+</header>

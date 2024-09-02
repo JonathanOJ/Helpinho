@@ -1,0 +1,61 @@
+org: helpinho
+app: serverless-crud
+service: serverless-crud
+frameworkVersion: "4"
+
+custom:
+  usersTableName: helpinho-users
+  helpinhoTableName: helpinho-helpinhos
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - dynamodb:Query
+            - dynamodb:Scan
+            - dynamodb:GetItem
+            - dynamodb:PutItem
+            - dynamodb:UpdateItem
+            - dynamodb:DeleteItem
+          Resource:
+            - Fn::GetAtt: [UsersTable, Arn]
+            - Fn::GetAtt: [HelpinhoTable, Arn]
+  environment:
+    USERS_TABLE: ${self:custom.usersTableName}
+    HELPINHO_TABLE: ${self:custom.helpinhoTableName}
+
+functions:
+  api:
+    handler: src/handler.handler
+    events:
+      - httpApi: "*"
+
+resources:
+  Resources:
+    UsersTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        AttributeDefinitions:
+          - AttributeName: userId
+            AttributeType: S
+        KeySchema:
+          - AttributeName: userId
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
+        TableName: ${self:custom.usersTableName}
+
+    HelpinhoTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        AttributeDefinitions:
+          - AttributeName: helpinhoId
+            AttributeType: S
+        KeySchema:
+          - AttributeName: helpinhoId
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
+        TableName: ${self:custom.helpinhoTableName}

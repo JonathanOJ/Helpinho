@@ -1,0 +1,166 @@
+<section class="flex flex-col gap-12">
+	<div class="flex md:flex-row flex-col items-center gap-4 justify-center mx-32">
+		<p-iconField iconPosition="left">
+			<p-inputIcon styleClass="pi pi-search" />
+			<input
+				(ngModelChange)="handleFilter()"
+				[(ngModel)]="searchText"
+				type="text"
+				pInputText
+				placeholder="Quem vamos ajudar hoje?"
+			/>
+		</p-iconField>
+		<p-dropdown
+			(ngModelChange)="handleFilter()"
+			[options]="categorys"
+			[(ngModel)]="category"
+			optionLabel="name"
+			placeholder="Escolha uma categoria"
+		/>
+	</div>
+	<section class="flex flex-col">
+		<section
+			class="pb-[64px] pt-4 h-[2130px] overflow-x-hidden"
+			infiniteScroll
+			[infiniteScrollDistance]="3"
+			[infiniteScrollThrottle]="500"
+			(scrolled)="onScroll()"
+			[scrollWindow]="false"
+		>
+			<section class="flex flex-wrap items-center justify-center gap-8">
+				@for (item of searchResults; track item; let index = $index) {
+				<section
+					class="hover:scale-105 ease-out duration-200 max-w-[85dvw] md:max-w-[400px] w-[400px] h-[500px] rounded-3xl shadow-2xl cursor-pointer"
+					[style.background-image]="
+						item.request_emergency
+							? 'linear-gradient(rgba(255, 200, 214, 6) 0%, rgba(147, 8, 67, 0.75) 95%), url(' + item.image + ')'
+							: ''
+					"
+					[ngClass]="{
+						'bg-no-repeat': item.request_emergency,
+						'bg-cover': item.request_emergency,
+						'bg-center': item.request_emergency
+					}"
+				>
+					@if(!item.request_emergency) {
+					<div class="relative">
+						@if(item.image) {
+						<img class="w-full h-[230px] rounded-t-3xl" src="{{ item.image }}" alt="Image of {{ item.title }}" />
+						} @else {
+						<div class="w-full h-[230px] rounded-t-3xl bg-[#c8c8c8] items-center justify-center flex">
+							<mat-icon class="text-[grey] w-8 h-8" svgIcon="camera-off"></mat-icon>
+						</div>
+						}
+
+						<p-tag [rounded]="true" class="absolute right-2.5 bottom-2.5 z-10" [value]="item.category[0]" />
+					</div>
+					}
+					<section class="flex flex-col py-5 px-7 gap-8">
+						<section class="flex flex-col gap-4">
+							<section class="flex items-center justify-between">
+								<section class="flex gap-2.5 items-center">
+									@if(item.user_responsable && item.user_responsable.image) {
+									<img [src]="item.user_responsable.image" alt="User profile" />
+									} @else {
+									<span class="w-8 h-8 flex justify-center items-center bg-[#ec4899] text-white rounded-full">{{
+										item.user_responsable.username[0]
+									}}</span>
+									}
+									<div class="flex flex-col">
+										<span
+											[class]="item.request_emergency ? 'text-white' : 'text-[#4F4F4F]'"
+											class="text-sm font-semibold"
+											>{{ item.user_responsable.username }}</span
+										>
+										@if(!item.request_emergency){
+
+										<span class="text-[#5D5D5D] text-xs">{{ item.user_responsable.email }}</span>
+										}
+									</div>
+								</section>
+								@if(item.request_emergency ) {
+
+								<p-tag [rounded]="true" [value]="item.category[0]" />
+								}
+							</section>
+							<div class="flex flex-col gap-3">
+								<h1
+									class="text-2xl font-semibold max-w-full overflow-hidden text-ellipsis whitespace-nowrap"
+									[class]="item.request_emergency ? 'text-white' : 'text-[#3D3D3D]'"
+								>
+									{{ item.title }}
+								</h1>
+								<p
+									[ngClass]="{
+										'text-white': item.request_emergency,
+										'text-[#5D5D5D]': !item.request_emergency,
+										'truncated-text-9l': item.request_emergency,
+										'truncated-text-2l': !item.request_emergency,
+										'h-[215px]': item.request_emergency
+									}"
+									class="max-h-[215px] max-w-full overflow-hidden text-ellipsis break-all whitespace-pre-line"
+									[title]="item.description"
+								>
+									{{ item.description }}
+								</p>
+							</div>
+						</section>
+						@if(item.request_emergency) {
+						<span
+							class="text-center font-medium text-sm p-[6px] text-white rounded-lg"
+							style="background-color: rgba(255, 38, 55, 0.4)"
+							>Helpinho urgente validado pela nossa equipe</span
+						>
+						} @if(item.users_donated.length > 0) {
+
+						<section class="flex relative h-8">
+							@for (user of item.users_donated.slice(0, 10); track user; let index = $index) {
+							<div
+								[style.left]="index > 0 ? index * 25 + 'px' : '0px'"
+								[style.z-index]="index"
+								class="absolute flex items-center"
+							>
+								@if(user.image) {
+								<img
+									class="w-8 h-8 rounded-full border-2 border-white"
+									[src]="user.image"
+									alt="User profile image of {{ user.username }}"
+								/>
+								} @else {
+								<span
+									class="w-8 h-8 flex justify-center items-center bg-[#ec4899] text-white rounded-full border-2 border-white"
+									>{{ item.user_responsable.username[0] }}</span
+								>
+								}
+							</div>
+							} @if(item.users_donated.length > 10) {
+							<span
+								[style.left]="10 * 25 + 'px'"
+								[style.z-index]="11"
+								class="w-8 h-8 text-[#ec4899] bg-[#FFF0F3] flex items-center justify-center rounded-full border-2 border-white absolute"
+								>+{{ item.users_donated ? item.users_donated.length - 10 : 0 }}</span
+							>
+							}
+						</section>
+						}
+					</section>
+				</section>
+				} @empty {
+				<strong>Nenhum item encontrado.</strong>
+				}
+			</section>
+			@if(showMoreHelpinhos) {
+			<section class="flex items-center justify-center h-[200px]">
+				<span class="flex items-center justify-center gap-2 text-[#ec4899] bg-[#FFF0F3] rounded-[8px] py-2 px-4 w-fit"
+					><p-progressSpinner
+						styleClass="w-[20px] h-[20px] flex"
+						strokeWidth="2"
+						fill="#FFF0F3"
+						animationDuration="1s"
+					/>Carregando mais helpinhos</span
+				>
+			</section>
+			}
+		</section>
+	</section>
+</section>

@@ -1,0 +1,344 @@
+<p-toast></p-toast>
+
+<p-stepper [linear]="true" [(activeStep)]="activeStep">
+	<p-stepperPanel header="Categoria do helpinho">
+		<ng-template pTemplate="header" let-onClick="onClick" let-index="index">
+			<section class="flex gap-3">
+				<div
+					class="w-[48px] h-[48px] flex items-center justify-center bg-[#ec4899] rounded-full"
+					[ngClass]="{
+						'text-white': activeStep == index,
+						'text-[#D1D1D1]': activeStep != index,
+						'bg-[#ec4899]': activeStep == index,
+						'bg-[#F6F6F6]': activeStep != index
+					}"
+				>
+					<mat-icon svgIcon="layers-outline"></mat-icon>
+				</div>
+				@if(activeStep == index){
+				<div class="flex flex-col justify-center">
+					<span class="text-xs text-[#ec4899] font-bold"> Passo {{ index + 1 }}/4 </span>
+					<span class="text-[#454545]">Categoria do helpinho</span>
+				</div>
+				}
+			</section>
+		</ng-template>
+		<ng-template pTemplate="content" let-nextCallback="nextCallback" let-index="index">
+			<section class="flex flex-col h-[700px] p-6 gap-6">
+				<div class="flex flex-col gap-2">
+					<h1 class="text-xl text-[#3d3d3d] font-bold">Em que categoria se encaixa seu helpinho?</h1>
+					<span class="text-[#4F4F4F] max-w-[400px]"
+						>Escolha pelo menos uma das categorias abaixo que represente seu helpinho.</span
+					>
+				</div>
+				<section class="h-[482px]">
+					<section class="flex gap-4 flex-wrap">
+						@for (item of categorys; track item; let index = $index) {
+						<section
+							[ngClass]="{
+								'border-2': item.selected,
+								border: !item.selected,
+								'border-[#E7E7E7]': !item.selected,
+								'border-[#ec4899]': item.selected
+							}"
+							class="rounded-xl w-[150px] h-[100px] items-center justify-center flex flex-col gap-2 cursor-pointer hover:bg-[#F6F6F6]"
+							(click)="item.selected = !item.selected; handleCategoriesSelected()"
+						>
+							<mat-icon
+								style="height: 42px; width: 42px"
+								[style.color]="!item.selected ? '#3D3D3D' : '#ec4899'"
+								[svgIcon]="item.icon"
+							></mat-icon>
+
+							<span [class]="item.selected ? 'text-[#ec4899]' : 'text-[#4F4F4F]'" class="font-semibold text-sm">{{
+								item.name
+							}}</span>
+						</section>
+						}
+					</section>
+				</section>
+				<section class="flex justify-between">
+					<p-button label="Cancelar" severity="danger" iconPos="right" (onClick)="onCancelEvent.emit()" />
+
+					<div class="flex justify-end">
+						<p-button
+							[disabled]="this.helpinho.category.length == 0"
+							label="Continuar"
+							iconPos="right"
+							(onClick)="nextCallback.emit()"
+						/>
+					</div>
+				</section>
+			</section>
+		</ng-template>
+	</p-stepperPanel>
+	<p-stepperPanel>
+		<ng-template pTemplate="header" let-onClick="onClick" let-index="index">
+			<section class="flex gap-3">
+				<div
+					class="w-[48px] h-[48px] flex items-center justify-center rounded-full"
+					[ngClass]="{
+						'text-white': activeStep == index,
+						'text-[#D1D1D1]': activeStep != index,
+						'bg-[#ec4899]': activeStep == index,
+						'bg-[#F6F6F6]': activeStep != index
+					}"
+				>
+					<mat-icon svgIcon="pencil-outline"></mat-icon>
+				</div>
+				@if(activeStep == index){
+
+				<div class="flex flex-col justify-center">
+					<span class="text-xs text-[#ec4899] font-bold"> Passo {{ index + 1 }}/4 </span>
+					<span class="text-[#454545]">Conhecendo o helpinho</span>
+				</div>
+				}
+			</section>
+		</ng-template>
+		<ng-template pTemplate="content" let-prevCallback="prevCallback" let-nextCallback="nextCallback" let-index="index">
+			<section class="flex flex-col h-[700px] p-6 gap-6">
+				<div class="flex flex-col gap-2">
+					<h1 class="text-xl text-[#3d3d3d] font-bold">Fale um pouco mais</h1>
+					<span class="text-[#4F4F4F] max-w-[400px]"
+						>Escreva mais detalhes sobre seu helpinho, não economize nas palavras.</span
+					>
+				</div>
+				<section class="h-[482px] gap-6 flex flex-col">
+					<section class="flex gap-2 items-end justify-between">
+						<div class="flex flex-col gap-1.5 w-[88%]">
+							<label class="text-sm text-[#4F4F4F]">Titulo do helpinho</label>
+							<input type="text" pInputText [(ngModel)]="helpinho.title" required placeholder="Seu titulo aqui" />
+
+							@if (!helpinho.title && isInvalid) {
+							<label class="text-xs text-[#ff2637]"> Campo obrigatório! </label>}
+						</div>
+						<p-toggleButton
+							class="mb-[6px]"
+							[(ngModel)]="helpinho.request_emergency"
+							onLabel="Urgente"
+							offLabel="Não urgente"
+						/>
+					</section>
+					<div class="flex flex-col gap-3 items-center justify-center py-4 rounded-lg border border-[#D1D1D1 ]">
+						<p-fileUpload
+							mode="basic"
+							chooseLabel="Escolha"
+							chooseIcon="pi pi-upload"
+							name="demo[]"
+							url="https://www.primefaces.org/cdn/api/upload.php"
+							accept="image/*"
+							maxFileSize="1000000"
+							(onUpload)="onUpload($event)"
+						/>
+						<div class="flex flex-col gap-1 text-center">
+							<span class="text-sm text-[#5D5D5D]"
+								><strong class="text-[#ec4899] font-semibold">Selecione</strong> uma foto para representar seu
+								helpinho</span
+							>
+							<span class="text-sm text-[#5D5D5D]">SVG, PNG, JPG or GIF (max. 800x400)</span>
+						</div>
+					</div>
+					<div class="flex flex-col gap-1.5">
+						<label class="text-sm text-[#4F4F4F]">Descrição</label>
+						<textarea
+							rows="5"
+							cols="30"
+							pInputTextarea
+							placeholder="Escreva a descrição do seu helpinho, não economize nas palavras"
+							[(ngModel)]="helpinho.description"
+						></textarea>
+
+						@if (!helpinho.description && isInvalid) {
+						<label class="text-xs text-[#ff2637]"> Campo obrigatório! </label>}
+					</div>
+				</section>
+				<section class="flex justify-between">
+					<p-button label="Cancelar" severity="danger" iconPos="right" (onClick)="onCancelEvent.emit()" />
+					<div class="flex justify-end gap-2">
+						<p-button label="Voltar" [outlined]="true" (onClick)="prevCallback.emit()" />
+						<p-button
+							[disabled]="!helpinho.title || !helpinho.description"
+							label="Continuar"
+							iconPos="right"
+							(onClick)="nextCallback.emit()"
+						/>
+					</div>
+				</section>
+			</section>
+		</ng-template>
+	</p-stepperPanel>
+	<p-stepperPanel header="Metas do helpinho">
+		<ng-template pTemplate="header" let-onClick="onClick" let-index="index">
+			<section class="flex gap-3">
+				<div
+					class="w-[48px] h-[48px] flex items-center justify-center rounded-full"
+					[ngClass]="{
+						'text-white': activeStep == index,
+						'text-[#D1D1D1]': activeStep != index,
+						'bg-[#ec4899]': activeStep == index,
+						'bg-[#F6F6F6]': activeStep != index
+					}"
+				>
+					<mat-icon svgIcon="database-outline"></mat-icon>
+				</div>
+				@if(activeStep == index){
+
+				<div class="flex flex-col justify-center">
+					<span class="text-xs text-[#ec4899] font-bold"> Passo {{ index + 1 }}/4 </span>
+					<span class="text-[#454545]">Metas do helpinho</span>
+				</div>
+				}
+			</section>
+		</ng-template>
+		<ng-template pTemplate="content" let-prevCallback="prevCallback" let-nextCallback="nextCallback" let-index="index">
+			<section class="flex flex-col h-[700px] p-6 gap-6">
+				<div class="flex flex-col gap-2">
+					<h1 class="text-xl text-[#3d3d3d] font-bold">Quanto você precisa?</h1>
+					<span class="text-[#4F4F4F] max-w-[400px]">Defina a meta que você quer alcançar com seu helpinho</span>
+				</div>
+				<section class="h-[482px]">
+					<section class="flex gap-4 flex-wrap items-center justify-center">
+						@for (item of optionsValues; track item; let index = $index) {
+						<div
+							[ngClass]="{
+								'border-2': item.selected,
+								border: !item.selected,
+								'border-[#E7E7E7]': !item.selected,
+								'border-[#ec4899]': item.selected
+							}"
+							class="rounded-xl w-[200px] h-[125px] items-center justify-center flex flex-col gap-2 cursor-pointer hover:bg-[#F6F6F6]"
+							(click)="handleValueSelected(item)"
+						>
+							<mat-icon
+								style="width: 42px; height: 42px"
+								[style.color]="item.selected ? '#ec4899' : '#3d3d3d'"
+								[svgIcon]="item.icon"
+							></mat-icon>
+
+							<span
+								[class]="item.selected ? 'text-[#ec4899]' : 'text-[#3d3d3d]'"
+								class="font-semibold text-[#4F4F4F] text-sm"
+								>R$ {{ getValueFormatted(item.value) }}</span
+							>
+						</div>
+						@if(index == 2 || index == 4){
+						<div class="w-full"></div>
+						} }
+					</section>
+				</section>
+				<section class="flex justify-between">
+					<p-button label="Cancelar" severity="danger" iconPos="right" (onClick)="onCancelEvent.emit()" />
+					<div class="flex justify-end gap-2">
+						<p-button label="Voltar" [outlined]="true" (onClick)="prevCallback.emit()" />
+						<p-button [disabled]="!helpinho.value" label="Continuar" iconPos="right" (onClick)="nextCallback.emit()" />
+					</div>
+				</section>
+			</section>
+		</ng-template>
+	</p-stepperPanel>
+	<p-stepperPanel header="Revisando">
+		<ng-template pTemplate="header" let-onClick="onClick" let-index="index">
+			<section class="flex gap-3">
+				<div
+					class="w-[48px] h-[48px] flex items-center justify-center rounded-full"
+					[ngClass]="{
+						'text-white': activeStep == index,
+						'text-[#D1D1D1]': activeStep != index,
+						'bg-[#ec4899]': activeStep == index,
+						'bg-[#F6F6F6]': activeStep != index
+					}"
+				>
+					<mat-icon svgIcon="check"></mat-icon>
+				</div>
+				@if(activeStep == index){
+
+				<div class="flex flex-col justify-center">
+					<span class="text-xs text-[#ec4899] font-bold"> Passo {{ index + 1 }}/4 </span>
+					<span class="text-[#454545]">Revisando</span>
+				</div>
+				}
+			</section>
+		</ng-template>
+		<ng-template pTemplate="content" let-prevCallback="prevCallback" let-index="index">
+			<section class="flex flex-col h-[700px] p-6 gap-6">
+				<div class="flex flex-col gap-2">
+					<h1 class="text-xl text-[#3d3d3d] font-bold">Falta pouco...</h1>
+					<span class="text-[#4F4F4F] max-w-[400px]"
+						>Revise seu helpinho, veja se está como você gostaria antes de publica-lo para todos.</span
+					>
+				</div>
+				<section class="h-[482px] w-full gap-6 flex flex-row">
+					<section class="w-[60%] flex flex-col gap-5">
+						<section class="flex gap-2 items-end justify-between">
+							<div class="flex flex-col gap-1.5 w-[80%]">
+								<label class="text-sm text-[#4F4F4F]">Titulo</label>
+								<input
+									[disabled]="true"
+									type="text"
+									pInputText
+									[(ngModel)]="helpinho.title"
+									required
+									placeholder="Seu titulo aqui"
+								/>
+							</div>
+							<p-toggleButton
+								class="mb-[6px]"
+								[disabled]="true"
+								[(ngModel)]="helpinho.request_emergency"
+								onLabel="Urgente"
+								offLabel="Não urgente"
+							/>
+						</section>
+
+						<div class="flex flex-col gap-1.5">
+							<label class="text-sm text-[#4F4F4F]">Categorias</label>
+							<input
+								[disabled]="true"
+								type="text"
+								pInputText
+								[(ngModel)]="categoriesFormatted"
+								required
+								placeholder="Seu titulo aqui"
+							/>
+						</div>
+						<div class="flex flex-col gap-1.5">
+							<label class="text-sm text-[#4F4F4F]">Valor solicitador</label>
+							<span
+								class="w-full font-bold text-[#ec4899] flex items-center justify-center h-[80px] rounded-lg border-[#E7E7E7] border"
+							>
+								R$ {{ getValueFormatted(helpinho.value) }}
+							</span>
+						</div>
+						<div class="flex flex-col gap-1.5">
+							<label class="text-sm text-[#4F4F4F]">Descrição</label>
+							<textarea
+								rows="5"
+								cols="30"
+								[disabled]="true"
+								pInputTextarea
+								placeholder="Escreva a descrição do seu helpinho, não economize nas palavras"
+								[(ngModel)]="helpinho.description"
+							></textarea>
+						</div>
+					</section>
+					<div class="w-[40%] h-[482px]">
+						@if(helpinho.image){
+						<img class="h-full w-full rounded-3xl" [src]="helpinho.image" />
+						} @else {
+						<div class="h-full w-full flex items-center justify-center rounded-3xl bg-[#c8c8c8]">
+							<mat-icon style="color: gray" svgIcon="camera-off"></mat-icon>
+						</div>
+						}
+					</div>
+				</section>
+				<section class="flex justify-between">
+					<p-button label="Cancelar" severity="danger" iconPos="right" (onClick)="onCancelEvent.emit()" />
+					<div class="flex justify-end gap-2">
+						<p-button label="Voltar" [outlined]="true" (onClick)="prevCallback.emit()" />
+						<p-button label="Criar" (onClick)="onSave()" />
+					</div>
+				</section>
+			</section>
+		</ng-template>
+	</p-stepperPanel>
+</p-stepper>

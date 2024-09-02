@@ -1,0 +1,109 @@
+<section
+	class="overflow-hidden md:overflow-visible bg-gradient-to-r from-[#FFF0F3] to-[#FF648E] px-[5dvw] md:px-[10dvw]"
+	[class]="isMobile ? (userSession.id ? 'h-[680px]' : 'h-[680px]') : userSession.id ? 'h-[500px]' : 'h-[850px]'"
+>
+	<h-header id="home" [activeIndex]="activeIndex"></h-header>
+
+	<section
+		class="flex flex-col md:flex-row flex-col justify-between md:justify-center"
+		[class]="userSession.id ? 'h-[400px]' : 'h-[700px]'"
+	>
+		@if(!userSession.id){
+		<section class="flex flex-col gap-4 justify-center w-full md:w-1/2">
+			<div
+				[style.animation]="isMobile ? 'slide-infinite 10s linear infinite' : ''"
+				class="md:bg-white/40 py-4 px-3.5 w-fit rounded-3xl whitespace-nowrap md:whitespace-normal flex gap-5 md:gap-3 flex-nowrap"
+				[class]="isMobile ? 'marquee-container' : ''"
+			>
+				@for (item of tagsMessages; track item; let index = $index) {
+				<label class="bg-white/40 md:bg-transparent rounded-3xl py-2 md:py-3 px-2 text-[#5D5D5D]">
+					<i
+						class="pi pi-check text-white bg-[#ec4899] rounded-full w-[18px] h-[18px] inline-flex items-center justify-center"
+					></i>
+					{{ item.title }}
+				</label>
+				}
+			</div>
+			<section class="flex flex-col gap-8">
+				<div class="text-[#454545] flex flex-col gap-5">
+					<span class="text-[32px] leading-[44px] md:text-5xl mdleading-[64px]"
+						>Faça a diferença com apenas <strong class="text-[#ec4899]"> um helpinho </strong></span
+					>
+					<span class="md:text-2xl"
+						>Os helpinho podem parecer pequenos, mas juntos fazem a
+						<strong class="text-[#ec4899]"> diferença na vida de todos </strong>diferença na vida de todos</span
+					>
+				</div>
+				<p-button [rounded]="true" label="Registre-se grátis" (click)="redirectToRegister()" />
+			</section>
+		</section>
+		<section class="md:w-1/2 flex items-end justify-center">
+			<img src="./../../../assets/images/homePicture.png" alt="Image of two people" />
+		</section>
+		} @else {
+		<section class="flex md:flex-row flex-col md:gap-0 gap-12 justify-between w-full items-center px-20">
+			<section class="flex flex-col gap-4 justify-end md:w-[600px]">
+				<div class="flex flex-col gap-6">
+					<h1 class="text-4xl font-light text-[#5D5D5D]">
+						Olá <strong class="text-5xl font-bold text-[#454545]">{{ userSession.username }}</strong>
+					</h1>
+					<span class="md:text-2xl text-[#5D5D5D]"
+						>Vamos dar um <strong class="text-[#ec4899]">helpinho</strong> hoje? Separamos uma seleção especial para
+						você</span
+					>
+				</div>
+				<div class="flex gap-3 rounded-3xl py-3 px-3.5 bg-white/[0.4] w-[360px]">
+					<span class="text-[#5D5D5D] px-3 py-2 rounded-xl leading-6 w-[165px]"
+						>Acompanhando <br />
+						<strong class="font-semibold text-[#ec4899] text-2xl">{{
+							userSession.total_helpinhos_donated ? userSession.total_helpinhos_donated : 0
+						}}</strong>
+						helpinhos</span
+					>
+					<span class="text-[#5D5D5D] px-3 py-2 rounded-xl leading-6 w-[165px]"
+						>Criou <br />
+						<strong class="font-semibold text-[#ec4899] text-2xl">{{
+							userSession.total_helpinhos_created ? userSession.total_helpinhos_created : 0
+						}}</strong>
+						helpinhos</span
+					>
+				</div>
+			</section>
+			<section class="relative">
+				<img class="w-[200px] h-[250px]" src="./../../../assets/images/imageHomeUserLogged.png" />
+				<div class="absolute inset-0 flex flex-col items-center justify-center text-center gap-10">
+					<span class="text-sm">
+						Você já doou <br />
+						<strong class="text-3xl text-[#F40B59]">R$ {{ getValueFormatted(userSession.total_donated) }}</strong>
+					</span>
+
+					<span class="text-sm mt-4">
+						<strong class="text-3xl text-[#F40B59]">{{ userSession.total_helpinhos_donated }}</strong
+						><br />
+						Helpinhos alegres
+					</span>
+				</div>
+			</section>
+		</section>
+		}
+	</section>
+</section>
+<section id="pesquisa" class="flex flex-col gap-5 pt-12 md:pt-[128px] px-2 md:px-16 pb-[64px]">
+	<section class="flex gap-2 justify-center flex-col md:flex-row">
+		@for (item of messagesInicialHome; track item; let index = $index) {
+
+		<div
+			[style.padding-left]="isMobile ? (index > 0 ? index * 20 + 25 + 'px' : '') : ''"
+			class="flex justify-end p-[25px] w-[300px] md:w-[276px] gap-5"
+		>
+			<span class="text-[40px] text-[#ec4899] font-bold leading-[50px]">{{ index + 1 }}.</span>
+			<div>
+				<span class="font-semibold text-[#530020] text-sm">{{ item.title }}</span>
+				<p class="text-[#888888] text-sm" [innerHtml]="item.detail"></p>
+			</div>
+		</div>
+		}
+	</section>
+	<h-list-items id="pesquisa"></h-list-items>
+</section>
+<h-footer id="sobre"></h-footer>

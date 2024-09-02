@@ -1,0 +1,137 @@
+<p-toast [breakpoints]="{ '920px': { width: '350px', right: '0',  } }" />
+
+<section class="flex flex-col md:flex-row w-dvw md:h-dvh h-fit p-6 gap-4">
+	<section class="md:w-1/2 w-full h-full flex flex-col items-center justify-between gap-6">
+		<img class="md:self-start self-center" src="./../../../assets/images/Logo Horizontal.png" alt="Logo Helpinho" />
+		<section class="h-fit flex flex-col justify-between md:w-[400px] w-full gap-8">
+			<div [class]="!createUser ? 'text-center' : 'text-start'" class="flex flex-col gap-2">
+				<h1 class="text-3xl font-semibold text-[#3D3D3D]">
+					{{ !createUser ? "Bem vindo de volta!" : "Registre-se grátis" }}
+				</h1>
+				<span class="text-base text-[#4F4F4F]">{{
+					!createUser
+						? "Entre e ajude os helpinho de hoje"
+						: "Seja bem vindo! Estamos felizes em te-lo na nossa rede apoio"
+				}}</span>
+			</div>
+			<section class="flex flex-col gap-5">
+				@if(createUser){
+
+				<div class="flex flex-col gap-1.5">
+					<label class="text-sm text-[#4F4F4F]">Nome</label>
+					<input type="text" pInputText [(ngModel)]="user.username" required placeholder="Como podemos lhe chamar" />
+
+					@if (!user.username && isInvalid) {
+					<label class="text-xs text-[#ff2637]"> Insira um email válido! </label>}
+				</div>
+				}
+				<div class="flex flex-col gap-1.5">
+					<label class="text-sm text-[#4F4F4F]">Email</label>
+					<input type="text" pInputText [(ngModel)]="user.email" required placeholder="Seu melhor email" />
+
+					@if (!user.email && isInvalid) {
+					<label class="text-xs text-[#ff2637]"> Insira um email válido! </label>}
+				</div>
+				@if(createUser){
+				<div class="flex gap-1.5 w-full">
+					<div class="w-1/2">
+						<label class="text-sm text-[#4F4F4F]">CPF/CNPJ</label>
+						<p-inputMask mask="999.999.999-99? 9" [(ngModel)]="user.cpf_cnpj" placeholder="000.000.000-00" />
+
+						@if (!user.cpf_cnpj && isInvalid) {
+						<label class="text-xs text-[#ff2637]"> Insira um CPF/CNPJ válido! </label>}
+					</div>
+					<div class="w-1/2">
+						<label class="text-sm text-[#4F4F4F]">Data de nascimento</label>
+						<p-calendar [readonlyInput]="true" [(ngModel)]="user.birthdate" dateFormat="dd/mm/yy" />
+						@if (!user.birthdate && isInvalid) {
+						<label class="text-xs text-[#ff2637]"> Insira uma data válida! </label>}
+					</div>
+				</div>
+				}
+				<div class="flex flex-col gap-1.5">
+					<label class="text-sm text-[#4F4F4F]">Senha</label>
+
+					<p-password
+						[(ngModel)]="user.password"
+						placeholder="********"
+						[toggleMask]="true"
+						promptLabel="Escolha uma senha"
+						weakLabel="Fraca"
+						mediumLabel="Média"
+						strongLabel="Forte"
+						styleClass="w-full"
+						[feedback]="createUser"
+					>
+						<ng-template pTemplate="footer">
+							<p-divider />
+							<p class="mt-2">Sugestões</p>
+							<ul class="pl-2 ml-2 mt-0 list-disc" style="line-height: 1.5">
+								<li>Pelo menos uma letra maiúscula</li>
+								<li>Pelo menos um número</li>
+								<li>Mínimo 8 caracteres</li>
+							</ul>
+						</ng-template>
+					</p-password>
+					@if (!user.password && isInvalid) {
+					<label class="text-xs text-[#ff2637]"> Campo obrigatório! </label> }
+				</div>
+
+				<div class="flex justify-between text-sm items-center text-[#4F4F4F]">
+					<p-checkbox [(ngModel)]="rememberUser" value="true" label="Lembrar conta" inputId="remember" />
+					<strong class="text-[#ec4899] cursor-pointer">Esqueceu sua senha ?</strong>
+				</div>
+
+				<div class="flex flex-col gap-4">
+					<p-button [label]="createUser ? 'Criar' : 'Entrar'" [disabled]="loading" (click)="handleLogin()" />
+					<div id="google-btn"></div>
+				</div>
+			</section>
+			<label class="text-sm text-[#4F4F4F] text-center"
+				>{{ createUser ? "Já tem uma conta?" : "Ainda não conhece o helpinho?" }}
+				<strong class="text-[#ec4899] cursor-pointer" (click)="createUser = !createUser">{{
+					createUser ? "Faça login" : "Registre-se grátis."
+				}}</strong></label
+			>
+		</section>
+		<div class="hidden w-full justify-between md:flex items-center">
+			<span class="flex gap-1 text-sm items-center">
+				<mat-icon svgIcon="copyright" class="w-3.5 h-3.5"></mat-icon>
+				Helpinho 2077
+			</span>
+			<span class="flex gap-1 text-sm items-center"
+				><mat-icon svgIcon="email-outline" class="w-4 h-4"></mat-icon>help&#64;helpinho.com</span
+			>
+		</div>
+	</section>
+	<section class="md:w-1/2 w-full flex items-center justify-end">
+		<p-carousel
+			[value]="usersFeedBacks"
+			[numVisible]="1"
+			[numScroll]="1"
+			[circular]="true"
+			class="md:w-[850px] w-full"
+			autoplayInterval="10000"
+		>
+			<ng-template let-item pTemplate="item">
+				<section class="relative mx-auto">
+					<img
+						[src]="item.image"
+						[alt]="item.username"
+						class="md:h-[90dvh] h-[250px] md:w-[850px] w-[400px] rounded-[30px]"
+					/>
+					<div class="flex flex-col gap-2 absolute text-white md:gap-6 bottom-4 md:bottom-14 left-4 md:left-14">
+						<p class="md:text-4xl text font-medium">{{ item.feedback }}</p>
+						<div class="flex gap-1 flex-col md:gap-3">
+							<span class="md:text-3xl font-semibold">{{ item.userName }}</span>
+							<div class="flex flex-col">
+								<span class="text-sm md:text-lg font-semibold">{{ item.userCompanyRole }}</span>
+								<span class="text-xs md:text-base font-medium">{{ item.userCompany }}</span>
+							</div>
+						</div>
+					</div>
+				</section>
+			</ng-template>
+		</p-carousel>
+	</section>
+</section>

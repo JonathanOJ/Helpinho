@@ -1,0 +1,113 @@
+<section class="px-[10dvw]">
+	<p-toast [breakpoints]="{ '920px': { width: '100%', right: '0', left: '0' } }" />
+	<h-header [activeIndex]="3"></h-header>
+
+	@if(!createMode){
+	<p-table
+		#dt2
+		[paginator]="true"
+		[rows]="5"
+		[rowsPerPageOptions]="[5, 10, 20]"
+		[value]="helpinhos"
+		[tableStyle]="{ 'min-width': '60rem', height: 'calc(100dvh - 300px)' }"
+		[globalFilterFields]="['title', 'description', 'category', 'value']"
+	>
+		<ng-template pTemplate="caption">
+			<section class="flex items-center justify-between px-[5dvw]">
+				<p-button label="Clear" [outlined]="true" icon="pi pi-filter-slash" (onClick)="clear(dt2)" />
+				<div class="flex gap-3 items-center">
+					<span class="p-input-icon-left ml-auto">
+						<i class="pi pi-search"></i>
+						<input
+							pInputText
+							type="text"
+							[(ngModel)]="searchValue"
+							(input)="onInput($event)"
+							placeholder="Pesquisar..."
+						/>
+					</span>
+					<p-button severity="secondary" icon="pi pi-refresh" (click)="getHelpinhos()" />
+					<p-button icon="pi pi-plus" (click)="handleCreateMode()" />
+				</div>
+			</section>
+		</ng-template>
+		<ng-template pTemplate="header">
+			<tr class="mx-[5dvw]">
+				<th pSortableColumn="title">Título <p-sortIcon field="code" /></th>
+				<th pSortableColumn="description">Descrição <p-sortIcon field="code" /></th>
+				<th>Imagem</th>
+				<th pSortableColumn="value">Valor <p-sortIcon field="code" /></th>
+				<th>% Arrecadado</th>
+				<th pSortableColumn="category">Categoria <p-sortIcon field="code" /></th>
+				<th></th>
+			</tr>
+		</ng-template>
+		<ng-template pTemplate="body" let-helpinho>
+			<tr class="mx-[5dvw]">
+				<td>{{ helpinho.title }}</td>
+				<td [title]="helpinho.description" class="max-w-[300px]">
+					{{
+						helpinho.description.length > 300 ? helpinho.description.substring(0, 297) + "..." : helpinho.description
+					}}
+				</td>
+				<td>
+					@if(helpinho.image){
+
+					<img
+						[src]="helpinho.image ? helpinho.image : './../../../assets/images/LogoHands.png'"
+						[alt]="helpinho.name"
+						class="rounded-2xl w-[100px] h-[100px]"
+					/>
+					} @else {
+					<div class="w-[100px] h-[100px] flex items-center justify-center rounded-3xl bg-[#c8c8c8]">
+						<mat-icon class="text-[grey] w-6 h-6" svgIcon="camera-off"></mat-icon>
+					</div>
+					}
+				</td>
+				<td>{{ helpinho.value | currency : "R$ " }}</td>
+				<td><p-progressBar [value]="helpinho.value > 0 ? (helpinho.valueCollected / helpinho.value) * 100 : 100" /></td>
+				<td>
+					<div class="flex gap-2 flex-wrap">
+						<p-tag [value]="helpinho.category[0]" />
+					</div>
+				</td>
+				<td>
+					<div class="flex flex-nowrap">
+						<p-button icon="pi pi-pencil" (click)="onEdit(helpinho.id)" />
+						<p-button
+							icon="pi pi-trash"
+							class="ml-2"
+							severity="danger"
+							(click)="selectedItem = helpinho; visible = true"
+						/>
+					</div>
+				</td>
+			</tr>
+		</ng-template>
+		<ng-template pTemplate="summary">
+			<div class="flex align-items-center justify-content-between">
+				No total temos {{ helpinhos ? helpinhos.length : 0 }} Helpinhos.
+			</div>
+		</ng-template>
+	</p-table>
+
+	<p-dialog header="Excluir Helpinho" [(visible)]="visible" [style]="{ width: '25rem' }">
+		<section class="flex flex-col items-end gap-3">
+			<label class="font-semibold w-6rem"
+				>Tem certeza que deseja excluir o item "{{ selectedItem.title }}"? Só será possível excluí-lo caso ainda não
+				tenha sido feita nenhuma doação!
+			</label>
+			<div class="flex justify-content-end gap-2">
+				<p-button label="Não" severity="secondary" (onClick)="visible = false" />
+				<p-button label="Sim" (onClick)="onDelete(helpinho.id); visible = false" />
+			</div>
+		</section>
+	</p-dialog>
+	} @else {
+	<h-helpinho-create
+		[helpinho]="helpinho"
+		(onCancelEvent)="handleCancelMode()"
+		(onSaveEvent)="getHelpinhos(); createMode = false"
+	/>
+	}
+</section>
