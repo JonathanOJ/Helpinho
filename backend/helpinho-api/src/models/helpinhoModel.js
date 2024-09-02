@@ -21,9 +21,6 @@ const searchHelpinho = async (searchBody) => {
     whereClauses.length > 0 ? "WHERE " + whereClauses.join(" AND ") : ""
   } LIMIT $${values.length + 1} OFFSET $${values.length + 2}`;
 
-  console.log(query);
-  console.log(values);
-
   values.push(itemsPerPage, offset);
 
   return db.any(query, values);
@@ -94,7 +91,7 @@ const updateHelpinho = async (helpinho) => {
   } = helpinho;
 
   const query =
-    "UPDATE helpinhos SET title = $1, description = $2, image = $3, users_donated = $4, category = $5, value = $6, request_emergency = $7, emergency = $8, user_responsable = $9, createdAt = $10 WHERE id = $11";
+    "UPDATE helpinhos SET title = $1, description = $2, image = $3, users_donated = $4, category = $5, value = $6, request_emergency = $7, emergency = $8, user_responsable = $9, created_at = $10 WHERE id = $11";
 
   const result = await db.result(query, [
     title,

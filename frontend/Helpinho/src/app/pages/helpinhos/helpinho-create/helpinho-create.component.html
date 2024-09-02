@@ -335,7 +335,7 @@
 					<p-button label="Cancelar" severity="danger" iconPos="right" (onClick)="onCancelEvent.emit()" />
 					<div class="flex justify-end gap-2">
 						<p-button label="Voltar" [outlined]="true" (onClick)="prevCallback.emit()" />
-						<p-button label="Criar" (onClick)="onSave()" />
+						<p-button [label]="!helpinho.id ? 'Criar' : 'Salvar'" (onClick)="onSave()" />
 					</div>
 				</section>
 			</section>
