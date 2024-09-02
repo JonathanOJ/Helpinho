@@ -20,7 +20,7 @@ Este projeto foi desenvolvido utilizando uma série de tecnologias para garantir
 
 ### Desafios
 
-Durante a migração para o ambiente serverless, enfrentamos um desafio relacionado ao CORS, que impediu a aplicação de funcionar plenamente na AWS Lambda.
+Durante a migração para o ambiente serverless, enfrentei um desafio relacionado ao CORS, que impediu a aplicação de funcionar plenamente na AWS Lambda.
 
 ### Próximos Passos
 
