@@ -103,6 +103,12 @@
 					"options": {
 						"buildTarget": "Helpinho:build"
 					}
+				},
+				"deploy": {
+					"builder": "angular-cli-ghpages:deploy",
+					"options": {
+						"baseHref": "/Helpinho/"
+					}
 				}
 			}
 		}

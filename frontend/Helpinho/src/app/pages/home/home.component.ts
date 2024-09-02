@@ -68,7 +68,6 @@ export class HomeComponent implements OnInit {
 
 	ngOnInit() {
 		this.userSession = JSON.parse(sessionStorage.getItem("user") || "{}");
-		console.log(this.userSession);
 
 		switch (this.router.url) {
 			case "/home/pesquisa":

@@ -104,7 +104,6 @@ export class LoginComponent implements OnInit, OnDestroy {
 		if (response.credential) {
 			const token = response.credential;
 			const user = this.decodeToken(token);
-			console.log(user);
 			this.getUserByEmail(user);
 		}
 	}
