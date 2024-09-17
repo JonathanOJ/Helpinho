@@ -38,6 +38,8 @@ import { StepperModule } from "primeng/stepper";
 import { FileUploadModule } from "primeng/fileupload";
 import { InputTextareaModule } from "primeng/inputtextarea";
 import { ToggleButtonModule } from "primeng/togglebutton";
+import { MenuModule } from "primeng/menu";
+import { InputNumberModule } from "primeng/inputnumber";
 import { HelpinhoCreateComponent } from "./pages/helpinhos/helpinho-create/helpinho-create.component";
 
 @NgModule({
@@ -83,6 +85,8 @@ import { HelpinhoCreateComponent } from "./pages/helpinhos/helpinho-create/helpi
 		FileUploadModule,
 		InputTextareaModule,
 		ToggleButtonModule,
+		MenuModule,
+		InputNumberModule,
 	],
 	providers: [provideAnimationsAsync()],
 	bootstrap: [AppComponent],

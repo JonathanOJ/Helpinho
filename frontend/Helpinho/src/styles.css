@@ -14,11 +14,11 @@
 }
 
 @layer utilities {
-	.truncated-text-2l {
+	.truncated-text-3l {
 		display: -webkit-box;
 		-webkit-box-orient: vertical;
-		-webkit-line-clamp: 2;
-		line-clamp: 2;
+		-webkit-line-clamp: 3;
+		line-clamp: 3;
 		line-height: 1.5em;
 	}
 	.truncated-text-5l {
@@ -28,11 +28,11 @@
 		line-clamp: 5;
 		line-height: 1.5em;
 	}
-	.truncated-text-9l {
+	.truncated-text-10l {
 		display: -webkit-box;
 		-webkit-box-orient: vertical;
-		-webkit-line-clamp: 9;
-		line-clamp: 9;
+		-webkit-line-clamp: 10;
+		line-clamp: 10;
 		line-height: 1.5em;
 	}
 }

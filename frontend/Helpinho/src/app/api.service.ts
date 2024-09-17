@@ -1,6 +1,7 @@
 import { HttpClient } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
 import { servidor } from "./app.component";
+import { UserDonatedModel } from "./pages/model/userDonated.model";
 
 @Injectable({
 	providedIn: "root",
@@ -10,6 +11,10 @@ export class ApiService {
 
 	getUserByEmail(email: string) {
 		return this.httpClient.get(`${servidor}/users/findByEmail/${email}`);
+	}
+
+	getUserById(userId: string) {
+		return this.httpClient.get(`${servidor}/users/findById/${userId}`);
 	}
 
 	saveUser(user: any) {
@@ -24,15 +29,15 @@ export class ApiService {
 		return this.httpClient.post(`${servidor}/helpinho/search`, body);
 	}
 
-	findHelpinhoById(id: number) {
+	findHelpinhoById(id: string) {
 		return this.httpClient.get(`${servidor}/helpinho/${id}`);
 	}
 
-	findHelpinhoByUser(id: number) {
+	findHelpinhoByUser(id: string) {
 		return this.httpClient.get(`${servidor}/helpinho/findAllByUser/${id}`);
 	}
 
-	updateUserHelpinhosCreated(id: number) {
+	updateUserHelpinhosCreated(id: string) {
 		return this.httpClient.get(`${servidor}/users/updateUserHelpinhosCreated/${id}`);
 	}
 
@@ -40,7 +45,11 @@ export class ApiService {
 		return this.httpClient.post(`${servidor}/helpinho/save`, helpinho);
 	}
 
-	deleteHelpinho(id: number) {
+	deleteHelpinho(id: string) {
 		return this.httpClient.delete(`${servidor}/helpinho/${id}`);
+	}
+
+	donateHelpinho(body: UserDonatedModel) {
+		return this.httpClient.post(`${servidor}/helpinho/donate`, body);
 	}
 }

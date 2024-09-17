@@ -1,11 +1,15 @@
-import { Component, inject, OnInit } from "@angular/core";
+import { Component, inject, OnDestroy, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { UserModel } from "../model/user.model";
 import { BreakpointObserver, Breakpoints } from "@angular/cdk/layout";
+import { ApiService } from "../../api.service";
+import { MessageService } from "primeng/api";
+import { Subscription } from "rxjs";
 
 @Component({
 	selector: "h-home",
 	templateUrl: "./home.component.html",
+	providers: [MessageService],
 	styles: [
 		`
 			::ng-deep .p-button.p-button-rounded {
@@ -26,14 +30,19 @@ import { BreakpointObserver, Breakpoints } from "@angular/cdk/layout";
 		`,
 	],
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, OnDestroy {
 	private router = inject(Router);
 	private breakpointObserver = inject(BreakpointObserver);
+	private api = inject(ApiService);
+	private toastService = inject(MessageService);
 
 	activeIndex: number = 0;
 	isMobile: boolean = false;
 
 	userSession: UserModel = new UserModel();
+	userId: string = sessionStorage.getItem("userId") || "";
+
+	getUserLoggedSub: Subscription = new Subscription();
 
 	messagesInicialHome = [
 		{
@@ -67,8 +76,6 @@ export class HomeComponent implements OnInit {
 	];
 
 	ngOnInit() {
-		this.userSession = JSON.parse(sessionStorage.getItem("user") || "{}");
-
 		switch (this.router.url) {
 			case "/home/pesquisa":
 				this.activeIndex = 1;
@@ -86,6 +93,27 @@ export class HomeComponent implements OnInit {
 
 		if (this.isMobile) {
 			this.tagsMessages = this.tagsMessages.concat(this.tagsMessages);
+		}
+
+		this.getUserLogged();
+	}
+
+	ngOnDestroy() {
+		this.getUserLoggedSub ? this.getUserLoggedSub.unsubscribe() : "";
+	}
+
+	getUserLogged() {
+		if (sessionStorage.getItem("userId")) {
+			const userId: string = sessionStorage.getItem("userId") || "";
+
+			this.getUserLoggedSub = this.api.getUserById(userId).subscribe({
+				next: (resp: any) => {
+					this.userSession = resp;
+				},
+				error: () => {
+					this.toastService.add({ severity: "error", summary: "", detail: "Erro ao carregar usuário!" });
+				},
+			});
 		}
 	}
 
@@ -122,6 +150,11 @@ export class HomeComponent implements OnInit {
 		} else {
 			section ? section.scrollIntoView({ behavior: "smooth" }) : "";
 		}
+	}
+
+	handleTabChange(index: number) {
+		this.activeIndex = index;
+		this.handleActiveTab(index);
 	}
 
 	getValueFormatted(value: number): string {

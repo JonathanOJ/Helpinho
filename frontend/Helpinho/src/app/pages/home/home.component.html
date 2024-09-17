@@ -1,14 +1,19 @@
 <section
 	class="overflow-hidden md:overflow-visible bg-gradient-to-r from-[#FFF0F3] to-[#FF648E] px-[5dvw] md:px-[10dvw]"
-	[class]="isMobile ? (userSession.id ? 'h-[680px]' : 'h-[680px]') : userSession.id ? 'h-[500px]' : 'h-[850px]'"
+	[class]="isMobile ? (userSession.userId ? 'h-[680px]' : 'h-[680px]') : userSession.userId ? 'h-[500px]' : 'h-[850px]'"
 >
-	<h-header id="home" [activeIndex]="activeIndex"></h-header>
+	<h-header
+		id="home"
+		[userSession]="userSession"
+		[activeIndex]="activeIndex"
+		(tabChangeEmit)="handleTabChange($event)"
+	></h-header>
 
 	<section
 		class="flex flex-col md:flex-row flex-col justify-between md:justify-center"
-		[class]="userSession.id ? 'h-[400px]' : 'h-[700px]'"
+		[class]="userSession.userId ? 'h-[400px]' : 'h-[700px]'"
 	>
-		@if(!userSession.id){
+		@if(!userId){
 		<section class="flex flex-col gap-4 justify-center w-full md:w-1/2">
 			<div
 				[style.animation]="isMobile ? 'slide-infinite 10s linear infinite' : ''"
@@ -44,8 +49,8 @@
 		<section class="flex md:flex-row flex-col md:gap-0 gap-12 justify-between w-full items-center px-20">
 			<section class="flex flex-col gap-4 justify-end md:w-[600px]">
 				<div class="flex flex-col gap-6">
-					<h1 class="text-4xl font-light text-[#5D5D5D]">
-						Olá <strong class="text-5xl font-bold text-[#454545]">{{ userSession.username }}</strong>
+					<h1 class="text-2xl md:text-4xl font-light text-[#5D5D5D]">
+						Olá <strong class="text-3xl md:text-5xl font-bold text-[#454545]">{{ userSession.username }}</strong>
 					</h1>
 					<span class="md:text-2xl text-[#5D5D5D]"
 						>Vamos dar um <strong class="text-[#ec4899]">helpinho</strong> hoje? Separamos uma seleção especial para
@@ -104,6 +109,6 @@
 		</div>
 		}
 	</section>
-	<h-list-items id="pesquisa"></h-list-items>
+	<h-list-items (donated)="getUserLogged()" [user]="userSession" id="pesquisa"></h-list-items>
 </section>
 <h-footer id="sobre"></h-footer>

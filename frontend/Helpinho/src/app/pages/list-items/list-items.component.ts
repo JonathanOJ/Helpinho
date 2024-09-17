@@ -1,8 +1,11 @@
-import { Component, inject, OnDestroy, OnInit } from "@angular/core";
+import { Component, EventEmitter, inject, Input, OnDestroy, OnInit, Output } from "@angular/core";
 import { ApiService } from "../../api.service";
 import { Subscription } from "rxjs";
 import { UserModel } from "../model/user.model";
 import { HelpinhoModel } from "../model/helpinho.model";
+import { UserDonatedModel } from "../model/userDonated.model";
+import { MessageService } from "primeng/api";
+import { BreakpointObserver, Breakpoints } from "@angular/cdk/layout";
 
 @Component({
 	selector: "h-list-items",
@@ -17,6 +20,10 @@ import { HelpinhoModel } from "../model/helpinho.model";
 				width: 250px;
 			}
 
+			::ng-deep .p-inputnumber {
+				width: 100%;
+			}
+
 			@media screen and (max-width: 768px) {
 				::ng-deep .p-icon-field-left > .p-inputtext {
 					width: 80dvw;
@@ -28,18 +35,30 @@ import { HelpinhoModel } from "../model/helpinho.model";
 			}
 		`,
 	],
+	providers: [MessageService],
 })
 export class ListItemsComponent implements OnInit, OnDestroy {
+	@Input() user: UserModel = new UserModel();
+	@Output() donated: EventEmitter<any> = new EventEmitter();
+
 	private api = inject(ApiService);
-	user: UserModel = new UserModel();
+	private toastService = inject(MessageService);
+	private breakpointObserver = inject(BreakpointObserver);
 
 	searchItensSub: Subscription = new Subscription();
+	donateSub: Subscription = new Subscription();
 
 	showMoreHelpinhos: boolean = false;
 	loading: boolean = false;
+	modalHelpinho: boolean = false;
+	modalDonate: boolean = false;
+	categoriesFormatted: string = "";
+	valueDonation: number = 0;
+	selectedItem: HelpinhoModel = new HelpinhoModel();
 	page: number = 1;
 	timeout: any;
 	searchResults: HelpinhoModel[] = [];
+	isMobile: boolean = false;
 
 	searchText: string = "";
 	category: any = { name: "Todos" };
@@ -62,18 +81,42 @@ export class ListItemsComponent implements OnInit, OnDestroy {
 
 	ngOnInit(): void {
 		this.searchItens();
+		this.handleWindowSize();
 	}
 
 	ngOnDestroy(): void {
+		this.donateSub ? this.donateSub.unsubscribe() : null;
 		this.searchItensSub ? this.searchItensSub.unsubscribe() : null;
+	}
+
+	handleWindowSize() {
+		this.breakpointObserver.observe([Breakpoints.XSmall, Breakpoints.Small]).subscribe((result) => {
+			this.isMobile = result.matches;
+		});
 	}
 
 	onScroll() {
 		if (this.loading) return;
-
 		this.page++;
-		this.showMoreHelpinhos = true;
 		this.searchItens();
+	}
+
+	openModalHelpinho(helpinho: HelpinhoModel) {
+		this.selectedItem = helpinho;
+		this.categoriesFormatted = this.selectedItem.category.join(", ");
+		this.modalHelpinho = true;
+	}
+
+	getValueFormatted(value: number): string {
+		if (value === null || value === undefined || isNaN(value)) return "";
+
+		let formattedValue = value.toFixed(2);
+
+		formattedValue = formattedValue.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+
+		formattedValue = formattedValue.replace(".", ",");
+
+		return formattedValue;
 	}
 
 	handleFilter() {
@@ -81,7 +124,7 @@ export class ListItemsComponent implements OnInit, OnDestroy {
 		this.timeout = setTimeout(() => {
 			this.page = 1;
 			this.searchItens(true);
-		}, 250);
+		}, 150);
 	}
 
 	searchItens(bySearch: boolean = false) {
@@ -98,12 +141,16 @@ export class ListItemsComponent implements OnInit, OnDestroy {
 
 		this.searchItensSub = this.api.searchHelpinho(body).subscribe({
 			next: (response: any) => {
-				if (response.length > 0) {
-					this.searchResults.length == 0 || bySearch
-						? (this.searchResults = response)
-						: this.searchResults.push(...response);
-				} else {
-					body.page == 1 ? (this.searchResults = []) : "";
+				if (response) {
+					const items = response.Items;
+
+					if (items.length > 0) {
+						this.searchResults.length == 0 || bySearch
+							? (this.searchResults = items)
+							: this.searchResults.push(...items);
+					} else {
+						body.page == 1 ? (this.searchResults = []) : "";
+					}
 				}
 
 				this.showMoreHelpinhos = false;
@@ -113,6 +160,39 @@ export class ListItemsComponent implements OnInit, OnDestroy {
 				this.searchResults = [];
 				this.showMoreHelpinhos = false;
 				this.loading = false;
+			},
+		});
+	}
+
+	donate() {
+		let user: UserDonatedModel = new UserDonatedModel();
+
+		if (this.valueDonation <= 0) {
+			this.toastService.add({ severity: "error", summary: "", detail: "Valor de doação inválido!" });
+			return;
+		}
+
+		user.userId = this.user.userId;
+		user.username = this.user.username;
+		user.donated_value = this.valueDonation;
+		user.image = this.user.image;
+		user.helpinhoId = this.selectedItem.helpinhoId;
+
+		this.loading = true;
+
+		this.donateSub = this.api.donateHelpinho(user).subscribe({
+			next: () => {
+				this.modalDonate = false;
+				this.loading = false;
+				this.selectedItem.value_donated += this.valueDonation;
+				this.searchItens(true);
+				this.donated.emit();
+				this.toastService.add({ severity: "success", summary: "", detail: "Doação realizada com sucesso!" });
+			},
+			error: () => {
+				this.modalDonate = false;
+				this.loading = false;
+				this.toastService.add({ severity: "error", summary: "", detail: "Erro ao realizar doação!" });
 			},
 		});
 	}

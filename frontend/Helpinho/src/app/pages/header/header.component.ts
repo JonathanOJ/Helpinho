@@ -1,7 +1,8 @@
-import { Component, inject, Input, OnInit } from "@angular/core";
+import { Component, EventEmitter, inject, Input, OnInit, Output } from "@angular/core";
 import { AuthService } from "../../auth.service";
 import { Router } from "@angular/router";
 import { UserModel } from "../model/user.model";
+import { ApiService } from "../../api.service";
 
 @Component({
 	selector: "h-header",
@@ -45,6 +46,10 @@ import { UserModel } from "../model/user.model";
 				}
 			}
 
+			::ng-deep .p-tabview-title {
+				font-weight: 400;
+			}
+
 			::ng-deep .p-button {
 				padding: 8px 14px;
 			}
@@ -63,11 +68,15 @@ import { UserModel } from "../model/user.model";
 })
 export class HeaderComponent implements OnInit {
 	@Input() activeIndex: number = 0;
+	@Input() userSession: UserModel = new UserModel();
+	@Output() tabChangeEmit: EventEmitter<number> = new EventEmitter<number>();
+
+	userId: string = sessionStorage.getItem("userId") || "";
+	actualTheme: string = "light" || "dark";
 
 	private auth = inject(AuthService);
 	private router = inject(Router);
-
-	userSession: UserModel = sessionStorage.getItem("user") ? JSON.parse(sessionStorage.getItem("user") || "") : null;
+	private api = inject(ApiService);
 
 	ngOnInit(): void {}
 
@@ -80,19 +89,6 @@ export class HeaderComponent implements OnInit {
 	}
 
 	tabChange() {
-		switch (this.activeIndex) {
-			case 0:
-				this.router.navigate([`/home`]);
-				break;
-			case 1:
-				this.router.navigate([`/home/pesquisa`]);
-				break;
-			case 2:
-				this.router.navigate([`/home/sobre`]);
-				break;
-			case 3:
-				this.router.navigate([`/helpinhos`]);
-				break;
-		}
+		this.tabChangeEmit.emit(this.activeIndex);
 	}
 }

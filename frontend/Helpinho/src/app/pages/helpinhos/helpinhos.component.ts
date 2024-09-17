@@ -38,7 +38,7 @@ import { HelpinhoModel } from "../model/helpinho.model";
 	],
 	providers: [MessageService],
 })
-export class HelpinhosComponent implements OnDestroy, AfterViewInit {
+export class HelpinhosComponent implements OnInit, OnDestroy, AfterViewInit {
 	@ViewChild("dt2") dt2: Table | undefined;
 
 	isMobile: boolean = window.innerWidth < 768;
@@ -49,10 +49,13 @@ export class HelpinhosComponent implements OnDestroy, AfterViewInit {
 	helpinho: HelpinhoModel = new HelpinhoModel();
 	selectedItem: HelpinhoModel = new HelpinhoModel();
 	userSession: UserModel = new UserModel();
+	activeIndex = 3;
+	loading: boolean = false;
 
 	getHelpinhosSub: Subscription = new Subscription();
 	onEditSub: Subscription = new Subscription();
 	onDeleteSub: Subscription = new Subscription();
+	getUserLoggedSub: Subscription = new Subscription();
 
 	private api = inject(ApiService);
 	private router = inject(Router);
@@ -60,10 +63,32 @@ export class HelpinhosComponent implements OnDestroy, AfterViewInit {
 
 	ngAfterViewInit(): void {
 		this.isMobile ? this.router.navigate(["/home"]) : "";
+	}
 
-		if (sessionStorage.getItem("user")) {
-			this.userSession = JSON.parse(sessionStorage.getItem("user") || "");
-			this.getHelpinhos();
+	ngOnInit(): void {
+		this.getUserLogged();
+	}
+
+	ngOnDestroy(): void {
+		this.getHelpinhosSub ? this.getHelpinhosSub.unsubscribe() : "";
+		this.onEditSub ? this.onEditSub.unsubscribe() : "";
+		this.onDeleteSub ? this.onDeleteSub.unsubscribe() : "";
+		this.getUserLoggedSub ? this.getUserLoggedSub.unsubscribe() : "";
+	}
+
+	getUserLogged() {
+		if (sessionStorage.getItem("userId")) {
+			const userId: string = sessionStorage.getItem("userId") || "";
+
+			this.getUserLoggedSub = this.api.getUserById(userId).subscribe({
+				next: (resp: any) => {
+					this.userSession = resp;
+					this.getHelpinhos();
+				},
+				error: () => {
+					this.toastService.add({ severity: "error", summary: "", detail: "Erro ao carregar usuário!" });
+				},
+			});
 		} else {
 			this.toastService.add({
 				severity: "warn",
@@ -76,19 +101,17 @@ export class HelpinhosComponent implements OnDestroy, AfterViewInit {
 		}
 	}
 
-	ngOnDestroy(): void {
-		this.getHelpinhosSub ? this.getHelpinhosSub.unsubscribe() : "";
-		this.onEditSub ? this.onEditSub.unsubscribe() : "";
-		this.onDeleteSub ? this.onDeleteSub.unsubscribe() : "";
-	}
-
 	getHelpinhos() {
-		this.getHelpinhosSub = this.api.findHelpinhoByUser(this.userSession.id).subscribe({
+		this.loading = true;
+		this.getHelpinhosSub = this.api.findHelpinhoByUser(this.userSession.userId).subscribe({
 			next: (resp: any) => {
 				this.helpinhos = resp;
+				this.loading = false;
 			},
 			error: () => {
 				this.helpinhos = [];
+				this.loading = false;
+
 				this.toastService.add({ severity: "error", summary: "", detail: "Erro ao carregar helpinhos!" });
 			},
 		});
@@ -115,11 +138,11 @@ export class HelpinhosComponent implements OnDestroy, AfterViewInit {
 		this.helpinho = new HelpinhoModel();
 	}
 
-	onEdit(id: number) {
-		this.createMode = true;
+	onEdit(id: string) {
 		this.onEditSub = this.api.findHelpinhoById(id).subscribe({
 			next: (resp: any) => {
 				this.helpinho = resp;
+				this.createMode = true;
 			},
 			error: () => {
 				this.toastService.add({ severity: "error", summary: "", detail: "Erro ao carregar helpinho!" });
@@ -127,15 +150,34 @@ export class HelpinhosComponent implements OnDestroy, AfterViewInit {
 		});
 	}
 
-	onDelete(id: number) {
+	onDelete(id: string) {
 		this.onDeleteSub = this.api.deleteHelpinho(id).subscribe({
 			next: () => {
-				this.helpinhos = this.helpinhos.filter((h) => h.id !== id);
+				this.helpinhos = this.helpinhos.filter((h) => h.helpinhoId !== id);
 				this.toastService.add({ severity: "success", summary: "", detail: "Helpinho deletado com sucesso!" });
 			},
-			error: () => {
-				this.toastService.add({ severity: "error", summary: "", detail: "Erro ao deletar helpinho!" });
+			error: (error: any) => {
+				let errorMessage = "";
+
+				error.status == 400 ? (errorMessage = error.error.error) : (errorMessage = "Erro ao deletar helpinho!");
+				this.toastService.add({ severity: "error", summary: "", detail: errorMessage });
 			},
 		});
+	}
+
+	handleTabChange(index: number) {
+		switch (index) {
+			case 0:
+				this.router.navigate([`/home`]);
+				break;
+			case 1:
+				this.router.navigate([`/home/pesquisa`]);
+				break;
+			case 2:
+				this.router.navigate([`/home/sobre`]);
+				break;
+			case 3:
+				break;
+		}
 	}
 }

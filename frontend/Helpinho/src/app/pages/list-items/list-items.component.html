@@ -1,3 +1,5 @@
+<p-toast [breakpoints]="{ '920px': { width: '100%', right: '0', left: '0' } }" />
+
 <section class="flex flex-col gap-12">
 	<div class="flex md:flex-row flex-col items-center gap-4 justify-center mx-32">
 		<p-iconField iconPosition="left">
@@ -20,7 +22,7 @@
 	</div>
 	<section class="flex flex-col">
 		<section
-			class="pb-[64px] pt-4 h-[2130px] overflow-x-hidden"
+			class="pb-[64px] pt-4 max-h-[2130px] overflow-x-hidden"
 			infiniteScroll
 			[infiniteScrollDistance]="3"
 			[infiniteScrollThrottle]="500"
@@ -41,6 +43,7 @@
 						'bg-cover': item.request_emergency,
 						'bg-center': item.request_emergency
 					}"
+					(click)="openModalHelpinho(item)"
 				>
 					@if(!item.request_emergency) {
 					<div class="relative">
@@ -55,7 +58,7 @@
 						<p-tag [rounded]="true" class="absolute right-2.5 bottom-2.5 z-10" [value]="item.category[0]" />
 					</div>
 					}
-					<section class="flex flex-col py-5 px-7 gap-8">
+					<section class="flex flex-col py-5 px-7 gap-6 md:gap-8">
 						<section class="flex flex-col gap-4">
 							<section class="flex items-center justify-between">
 								<section class="flex gap-2.5 items-center">
@@ -95,11 +98,12 @@
 									[ngClass]="{
 										'text-white': item.request_emergency,
 										'text-[#5D5D5D]': !item.request_emergency,
-										'truncated-text-9l': item.request_emergency,
-										'truncated-text-2l': !item.request_emergency,
-										'h-[215px]': item.request_emergency
+										'truncated-text-10l': item.request_emergency,
+										'truncated-text-3l': !item.request_emergency,
+										'h-[240px]': item.request_emergency,
+										'h-[70px]': !item.request_emergency
 									}"
-									class="max-h-[215px] max-w-full overflow-hidden text-ellipsis break-all whitespace-pre-line"
+									class="max-w-full overflow-hidden text-ellipsis break-all whitespace-pre-line"
 									[title]="item.description"
 								>
 									{{ item.description }}
@@ -120,6 +124,7 @@
 								[style.left]="index > 0 ? index * 25 + 'px' : '0px'"
 								[style.z-index]="index"
 								class="absolute flex items-center"
+								[title]="user.username"
 							>
 								@if(user.image) {
 								<img
@@ -130,7 +135,7 @@
 								} @else {
 								<span
 									class="w-8 h-8 flex justify-center items-center bg-[#ec4899] text-white rounded-full border-2 border-white"
-									>{{ item.user_responsable.username[0] }}</span
+									>{{ user.username[0] }}</span
 								>
 								}
 							</div>
@@ -165,3 +170,66 @@
 		</section>
 	</section>
 </section>
+
+<p-dialog header="Helpinho" [(visible)]="modalHelpinho" [style]="{ width: isMobile ? '95dvw' : '60dvw' }">
+	<section class="h-fit md:h-[482px] w-full gap-6 flex flex-col-reverse md:flex-row">
+		<section class="md:w-[60%] flex flex-col gap-5">
+			<div class="flex flex-col gap-1.5">
+				<label class="text-sm text-[#4F4F4F]">Titulo:</label>
+				<span class="w-full p-2 h-fit rounded-lg border-[#E7E7E7] border">{{ selectedItem.title }}</span>
+			</div>
+			<div class="flex flex-col gap-1.5">
+				<label class="text-sm text-[#4F4F4F]">Categorias:</label>
+				<span class="w-full p-2 h-fit rounded-lg border-[#E7E7E7] border">{{ categoriesFormatted }}</span>
+			</div>
+			<section class="flex gap-3">
+				<div class="flex flex-col gap-1.5 w-1/2">
+					<label class="text-sm text-[#4F4F4F]">Valor solicitador</label>
+					<span
+						class="w-full font-bold text-[#ec4899] flex items-center justify-center h-[80px] rounded-lg border-[#E7E7E7] border"
+					>
+						R$ {{ getValueFormatted(selectedItem.value_required) }}
+					</span>
+				</div>
+				<div class="flex flex-col gap-1.5 w-1/2">
+					<label class="text-sm text-[#4F4F4F]">Valor arrecadado</label>
+					<span
+						class="w-full font-bold text-[#ec4899] flex items-center justify-center h-[80px] rounded-lg border-[#E7E7E7] border"
+					>
+						R$ {{ getValueFormatted(selectedItem.value_donated) }}
+					</span>
+				</div>
+			</section>
+			<div class="flex flex-col gap-1.5 h-full">
+				<label class="text-sm text-[#4F4F4F]">Descrição:</label>
+				<span class="w-full h-full md:max-h-[155px] p-2 h-fit rounded-lg border-[#E7E7E7] border overflow-y-auto">{{
+					selectedItem.description
+				}}</span>
+			</div>
+		</section>
+		<div class="md:w-[40%] h-[200px] md:h-[482px] relative">
+			@if(selectedItem.image){
+			<img class="h-[200px] md:h-full w-full rounded-3xl" [src]="selectedItem.image" />
+			} @else {
+			<div class="h-[200px] md:h-full w-full flex items-center justify-center rounded-3xl bg-[#c8c8c8]">
+				<mat-icon style="color: gray" svgIcon="camera-off"></mat-icon>
+			</div>
+			} @if(selectedItem.request_emergency){
+			<p-tag [rounded]="true" class="absolute left-2.5 bottom-2.5 z-10" value="Urgente" />
+			}
+		</div>
+	</section>
+	<section class="flex justify-end mt-4">
+		<p-button label="Realizar doação" (onClick)="modalDonate = true" />
+	</section>
+</p-dialog>
+
+<p-dialog header="Doar" [(visible)]="modalDonate" [style]="{ width: '300px' }">
+	<div class="flex flex-col gap-1.5 w-full]">
+		<label class="text-sm text-[#4F4F4F]">Qual o valor que deseja doar?</label>
+		<p-inputNumber [(ngModel)]="valueDonation" mode="decimal" [minFractionDigits]="2" [maxFractionDigits]="2" />
+	</div>
+	<section class="flex justify-end mt-4">
+		<p-button [loading]="loading" label="Doar" (onClick)="donate()" />
+	</section>
+</p-dialog>

@@ -1,113 +1,181 @@
-const db = require("./connection");
+const AWS = require("aws-sdk");
+
+const HELPINHO_TABLE = process.env.HELPINHO_TABLE;
+const dynamoDbClient = new AWS.DynamoDB.DocumentClient();
+
+const findById = async (helpinhoId) => {
+  const params = {
+    TableName: HELPINHO_TABLE,
+    Key: { helpinhoId },
+  };
+
+  try {
+    const result = await dynamoDbClient.get(params).promise();
+    return result.Item;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+};
+
+const findAllByUser = async (userId) => {
+  const params = {
+    TableName: HELPINHO_TABLE,
+    FilterExpression: "user_responsable.userId = :userId",
+    ExpressionAttributeValues: {
+      ":userId": userId,
+    },
+  };
+
+  try {
+    const result = await dynamoDbClient.scan(params).promise();
+    return result.Items;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+};
 
 const searchHelpinho = async (searchBody) => {
   const { search, category, page, itemsPerPage } = searchBody;
   const offset = itemsPerPage * (page - 1);
 
-  let whereClauses = [];
-  let values = [];
+  const params = {
+    TableName: HELPINHO_TABLE,
+    Limit: itemsPerPage,
+  };
 
+  const filterExpressions = [];
+  const expressionAttributeValues = {};
+
+  // Adicionar filtro de busca por título
   if (search) {
-    whereClauses.push(`title ILIKE $${values.length + 1}`);
-    values.push(`%${search}%`);
+    filterExpressions.push("contains(title, :search)");
+    expressionAttributeValues[":search"] = search;
   }
 
+  // Adicionar filtro de categoria
   if (category) {
-    whereClauses.push(`$${values.length + 1} = ANY(category)`);
-    values.push(`${category}`);
+    filterExpressions.push(":category = ANY(category)");
+    expressionAttributeValues[":category"] = category;
   }
 
-  const query = `SELECT * FROM helpinhos ${
-    whereClauses.length > 0 ? "WHERE " + whereClauses.join(" AND ") : ""
-  } LIMIT $${values.length + 1} OFFSET $${values.length + 2}`;
+  // Apenas incluir FilterExpression se houver filtros
+  if (filterExpressions.length > 0) {
+    params.FilterExpression = filterExpressions.join(" AND ");
+    params.ExpressionAttributeValues = expressionAttributeValues;
+  }
 
-  values.push(itemsPerPage, offset);
+  params.ExclusiveStartKey = offset ? { id: offset } : null;
 
-  return db.any(query, values);
-};
-
-const findById = async (id) => {
-  const query = "SELECT * FROM helpinhos WHERE id = $1";
-  return db.oneOrNone(query, [id]);
-};
-
-const findAllByUser = async (userId) => {
-  const query =
-    "SELECT * FROM helpinhos WHERE (user_responsable -> 'id')::INTEGER = $1";
-  return db.any(query, [userId]);
+  try {
+    const result = await dynamoDbClient.scan(params).promise();
+    return result;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
 };
 
 const createHelpinho = async (helpinho) => {
-  const {
-    title,
-    description,
-    image,
-    category,
-    users_donated,
-    value,
-    request_emergency,
-    emergency,
-    user_responsable,
-  } = helpinho;
-  const dateUTC = new Date().toUTCString();
+  const dateUTC = new Date().toISOString();
+  const newId = Date.now().toString();
 
-  const query =
-    "INSERT INTO helpinhos (title, description, image, category, users_donated, value, request_emergency, emergency, user_responsable, created_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING id";
+  helpinho.helpinhoId = newId;
 
-  const createdHelpinho = await db.one(query, [
-    title,
-    description,
-    image,
-    category,
-    users_donated,
-    value,
-    request_emergency,
-    emergency,
-    user_responsable,
-    dateUTC,
-  ]);
+  const params = {
+    TableName: HELPINHO_TABLE,
+    Item: {
+      ...helpinho,
+      created_at: dateUTC,
+    },
+    ReturnValues: "ALL_OLD",
+  };
 
-  return { insertId: createdHelpinho.id };
-};
-
-const deleteHelpinho = async (id) => {
-  const result = await db.result("DELETE FROM helpinhos WHERE id = $1", [id]);
-  return result.rowCount;
+  try {
+    await dynamoDbClient.put(params).promise();
+    return { helpinhoId: newId, ...helpinho };
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
 };
 
 const updateHelpinho = async (helpinho) => {
-  const {
-    id,
-    title,
-    description,
-    image,
-    category,
-    users_donated,
-    value,
-    request_emergency,
-    emergency,
-    user_responsable,
-    createdAt,
-  } = helpinho;
+  const { helpinhoId, ...updateFields } = helpinho;
 
-  const query =
-    "UPDATE helpinhos SET title = $1, description = $2, image = $3, users_donated = $4, category = $5, value = $6, request_emergency = $7, emergency = $8, user_responsable = $9, created_at = $10 WHERE id = $11";
+  const updateExpression = [];
+  const expressionAttributeValues = {};
 
-  const result = await db.result(query, [
-    title,
-    description,
-    image,
-    users_donated,
-    category,
-    value,
-    request_emergency,
-    emergency,
-    user_responsable,
-    createdAt,
-    id,
-  ]);
+  for (const key in updateFields) {
+    updateExpression.push(`${key} = :${key}`);
+    expressionAttributeValues[`:${key}`] = updateFields[key];
+  }
 
-  return result.rowCount;
+  const params = {
+    TableName: HELPINHO_TABLE,
+    Key: { helpinhoId },
+    UpdateExpression: `SET ${updateExpression.join(", ")}`,
+    ExpressionAttributeValues: expressionAttributeValues,
+    ReturnValues: "ALL_NEW",
+  };
+
+  try {
+    const result = await dynamoDbClient.update(params).promise();
+    return result.Attributes;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+};
+
+const deleteHelpinho = async (helpinhoId) => {
+  const params = {
+    TableName: HELPINHO_TABLE,
+    Key: { helpinhoId },
+  };
+
+  try {
+    const result = await dynamoDbClient.delete(params).promise();
+    return result.Attributes ? true : false;
+  } catch (error) {
+    console.error(error);
+    return false;
+  }
+};
+
+const donate = async (donation) => {
+  const { helpinhoId, donated_value } = donation;
+
+  const params = {
+    TableName: HELPINHO_TABLE,
+    Key: { helpinhoId },
+    UpdateExpression:
+      "SET users_donated = list_append(users_donated, :donation)",
+    ExpressionAttributeValues: {
+      ":donation": [donation],
+    },
+    ReturnValues: "ALL_NEW",
+  };
+
+  const updateHelpinhoParams = {
+    TableName: HELPINHO_TABLE,
+    Key: { helpinhoId },
+    UpdateExpression: "SET value_donated = value_donated + :donated_value",
+    ExpressionAttributeValues: {
+      ":donated_value": donated_value,
+    },
+    ReturnValues: "ALL_NEW",
+  };
+
+  try {
+    const result = await dynamoDbClient.update(params).promise();
+    await dynamoDbClient.update(updateHelpinhoParams).promise();
+    return result.Attributes;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
 };
 
 module.exports = {
@@ -117,4 +185,5 @@ module.exports = {
   createHelpinho,
   deleteHelpinho,
   updateHelpinho,
+  donate,
 };

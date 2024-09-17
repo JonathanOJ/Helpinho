@@ -1,7 +1,7 @@
 {
   "/Users/jonathanjacobovski/Desktop/Helpinho/Helpinho/backend/helpinho-api": {
     "versionSfCore": null,
-    "versionFramework": "4.2.4",
+    "versionFramework": "4.3.3",
     "isWithinCompose": false,
     "isCompose": false,
     "composeOrgName": null,
@@ -249,7 +249,7 @@
                         "S3Bucket": {
                           "Ref": "ServerlessDeploymentBucket"
                         },
-                        "S3Key": "serverless/serverless-crud/dev/1725238037158-2024-09-02T00:47:17.158Z/serverless-crud.zip"
+                        "S3Key": "serverless/serverless-crud/dev/1726531741477-2024-09-17T00:09:01.477Z/serverless-crud.zip"
                       },
                       "Handler": "src/handler.handler",
                       "Runtime": "nodejs18.x",
@@ -273,14 +273,14 @@
                       "ApiLogGroup"
                     ]
                   },
-                  "ApiLambdaVersionGN2ASt7dOvabpEqbKiFGyEzdQ3xOR046x59nA7jGEU": {
+                  "ApiLambdaVersion6Wv2oqS00cciBfeoXmIWY2LagFO0vW9JNO8lHQ63Ms": {
                     "Type": "AWS::Lambda::Version",
                     "DeletionPolicy": "Retain",
                     "Properties": {
                       "FunctionName": {
                         "Ref": "ApiLambdaFunction"
                       },
-                      "CodeSha256": "IkaBvGnwN17+HfblbFo0EAj0ukwVcghYfn///vu6ZOE="
+                      "CodeSha256": "r/XbUFh7m4nOAV2kshCWwkMBhUtRo9/MX0sirleIam4="
                     }
                   },
                   "HttpApi": {
@@ -429,7 +429,7 @@
                   "ApiLambdaFunctionQualifiedArn": {
                     "Description": "Current Lambda function version",
                     "Value": {
-                      "Ref": "ApiLambdaVersionGN2ASt7dOvabpEqbKiFGyEzdQ3xOR046x59nA7jGEU"
+                      "Ref": "ApiLambdaVersion6Wv2oqS00cciBfeoXmIWY2LagFO0vW9JNO8lHQ63Ms"
                     },
                     "Export": {
                       "Name": "sls-serverless-crud-dev-ApiLambdaFunctionQualifiedArn"
@@ -570,7 +570,7 @@
                 "timeout": 6,
                 "runtime": "nodejs18.x",
                 "vpc": {},
-                "versionLogicalId": "ApiLambdaVersionGN2ASt7dOvabpEqbKiFGyEzdQ3xOR046x59nA7jGEU"
+                "versionLogicalId": "ApiLambdaVersion6Wv2oqS00cciBfeoXmIWY2LagFO0vW9JNO8lHQ63Ms"
               }
             },
             "resources": {
@@ -621,9 +621,16 @@
           "config": {
             "type": "self"
           },
-          "options": {},
+          "options": {
+            "version": true
+          },
           "stage": "dev",
           "dashboard": null,
+          "logger": {
+            "namespace": "s:core:resolver:self",
+            "prefix": null,
+            "prefixColor": null
+          },
           "_credentialsPromise": "<REDACTED>"
         },
         "resolvers": {}
@@ -871,7 +878,7 @@
                   "S3Bucket": {
                     "Ref": "ServerlessDeploymentBucket"
                   },
-                  "S3Key": "serverless/serverless-crud/dev/1725238037158-2024-09-02T00:47:17.158Z/serverless-crud.zip"
+                  "S3Key": "serverless/serverless-crud/dev/1726531741477-2024-09-17T00:09:01.477Z/serverless-crud.zip"
                 },
                 "Handler": "src/handler.handler",
                 "Runtime": "nodejs18.x",
@@ -895,14 +902,14 @@
                 "ApiLogGroup"
               ]
             },
-            "ApiLambdaVersionGN2ASt7dOvabpEqbKiFGyEzdQ3xOR046x59nA7jGEU": {
+            "ApiLambdaVersion6Wv2oqS00cciBfeoXmIWY2LagFO0vW9JNO8lHQ63Ms": {
               "Type": "AWS::Lambda::Version",
               "DeletionPolicy": "Retain",
               "Properties": {
                 "FunctionName": {
                   "Ref": "ApiLambdaFunction"
                 },
-                "CodeSha256": "IkaBvGnwN17+HfblbFo0EAj0ukwVcghYfn///vu6ZOE="
+                "CodeSha256": "r/XbUFh7m4nOAV2kshCWwkMBhUtRo9/MX0sirleIam4="
               }
             },
             "HttpApi": {
@@ -1051,7 +1058,7 @@
             "ApiLambdaFunctionQualifiedArn": {
               "Description": "Current Lambda function version",
               "Value": {
-                "Ref": "ApiLambdaVersionGN2ASt7dOvabpEqbKiFGyEzdQ3xOR046x59nA7jGEU"
+                "Ref": "ApiLambdaVersion6Wv2oqS00cciBfeoXmIWY2LagFO0vW9JNO8lHQ63Ms"
               },
               "Export": {
                 "Name": "sls-serverless-crud-dev-ApiLambdaFunctionQualifiedArn"
@@ -1192,7 +1199,7 @@
           "timeout": 6,
           "runtime": "nodejs18.x",
           "vpc": {},
-          "versionLogicalId": "ApiLambdaVersionGN2ASt7dOvabpEqbKiFGyEzdQ3xOR046x59nA7jGEU"
+          "versionLogicalId": "ApiLambdaVersion6Wv2oqS00cciBfeoXmIWY2LagFO0vW9JNO8lHQ63Ms"
         }
       },
       "resources": {
@@ -1243,10 +1250,13 @@
     "command": [
       "deploy"
     ],
-    "options": {},
+    "options": {
+      "version": true
+    },
     "error": null,
     "params": {},
-    "machineId": "ec8c892f054f316911596745b5e00e25",
+    "machineId": "60f779d2b6f65f05f86c8a35520ef850",
+    "stage": "dev",
     "accessKeyV2": "<REDACTED>",
     "accessKeyV1": "<REDACTED>",
     "orgId": "44eb9ca3-2272-474a-8991-13251d5cb8cf",
@@ -1267,26 +1277,28 @@
     "userName": "helpinho",
     "subscription": null,
     "userEmail": "jonathan.ojacobovski@gmail.com",
+    "serviceProviderAwsRegion": "us-east-1",
     "serviceProviderAwsCredentials": "<REDACTED>",
     "serviceProviderAwsAccountId": "886436931713",
-    "projectType": "framework",
-    "versionSf": "4.2.4",
+    "projectType": "traditional",
+    "versionSf": "4.3.3",
     "serviceProviderAwsCfStackName": "serverless-crud-dev",
     "integrations": {},
+    "serviceUniqueId": "arn:aws:cloudformation:us-east-1:886436931713:stack/serverless-crud-dev/d8925950-68af-11ef-bd52-0e00e3b35d8b",
     "serviceProviderAwsCfStackId": "arn:aws:cloudformation:us-east-1:886436931713:stack/serverless-crud-dev/d8925950-68af-11ef-bd52-0e00e3b35d8b",
     "serviceProviderAwsCfStackCreated": "2024-09-01T22:16:33.442Z",
-    "serviceProviderAwsCfStackUpdated": "2024-09-02T00:47:40.828Z",
+    "serviceProviderAwsCfStackUpdated": "2024-09-17T00:09:28.355Z",
     "serviceProviderAwsCfStackStatus": "UPDATE_COMPLETE",
     "serviceProviderAwsCfStackOutputs": [
       {
         "OutputKey": "ApiLambdaFunctionQualifiedArn",
-        "OutputValue": "arn:aws:lambda:us-east-1:886436931713:function:serverless-crud-dev-api:28",
+        "OutputValue": "arn:aws:lambda:us-east-1:886436931713:function:serverless-crud-dev-api:92",
         "Description": "Current Lambda function version",
         "ExportName": "sls-serverless-crud-dev-ApiLambdaFunctionQualifiedArn"
       },
       {
         "OutputKey": "HttpApiId",
-        "OutputValue": "jowfeta145",
+        "OutputValue": "auh2es6d5m",
         "Description": "Id of the HTTP API",
         "ExportName": "sls-serverless-crud-dev-HttpApiId"
       },
@@ -1297,7 +1309,7 @@
       },
       {
         "OutputKey": "HttpApiUrl",
-        "OutputValue": "https://jowfeta145.execute-api.us-east-1.amazonaws.com",
+        "OutputValue": "https://auh2es6d5m.execute-api.us-east-1.amazonaws.com",
         "Description": "URL of the HTTP API",
         "ExportName": "sls-serverless-crud-dev-HttpApiUrl"
       }

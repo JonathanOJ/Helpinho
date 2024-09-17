@@ -212,7 +212,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/serverless-crud/dev/1725238037158-2024-09-02T00:47:17.158Z/serverless-crud.zip"
+                "S3Key": "serverless/serverless-crud/dev/1726531741477-2024-09-17T00:09:01.477Z/serverless-crud.zip"
               },
               "Handler": "src/handler.handler",
               "Runtime": "nodejs18.x",
@@ -236,14 +236,14 @@
               "ApiLogGroup"
             ]
           },
-          "ApiLambdaVersionGN2ASt7dOvabpEqbKiFGyEzdQ3xOR046x59nA7jGEU": {
+          "ApiLambdaVersion6Wv2oqS00cciBfeoXmIWY2LagFO0vW9JNO8lHQ63Ms": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "ApiLambdaFunction"
               },
-              "CodeSha256": "IkaBvGnwN17+HfblbFo0EAj0ukwVcghYfn///vu6ZOE="
+              "CodeSha256": "r/XbUFh7m4nOAV2kshCWwkMBhUtRo9/MX0sirleIam4="
             }
           },
           "HttpApi": {
@@ -389,7 +389,7 @@
           "ApiLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "ApiLambdaVersionGN2ASt7dOvabpEqbKiFGyEzdQ3xOR046x59nA7jGEU"
+              "Ref": "ApiLambdaVersion6Wv2oqS00cciBfeoXmIWY2LagFO0vW9JNO8lHQ63Ms"
             },
             "Export": {
               "Name": "sls-serverless-crud-dev-ApiLambdaFunctionQualifiedArn"
@@ -535,7 +535,7 @@
         "timeout": 6,
         "runtime": "nodejs18.x",
         "vpc": {},
-        "versionLogicalId": "ApiLambdaVersionGN2ASt7dOvabpEqbKiFGyEzdQ3xOR046x59nA7jGEU"
+        "versionLogicalId": "ApiLambdaVersion6Wv2oqS00cciBfeoXmIWY2LagFO0vW9JNO8lHQ63Ms"
       }
     },
     "resources": {
@@ -609,7 +609,7 @@
     "artifact": "/Users/jonathanjacobovski/Desktop/Helpinho/Helpinho/backend/helpinho-api/.serverless/serverless-crud.zip"
   },
   "package": {
-    "artifactDirectoryName": "serverless/serverless-crud/dev/1725238037158-2024-09-02T00:47:17.158Z",
+    "artifactDirectoryName": "serverless/serverless-crud/dev/1726531741477-2024-09-17T00:09:01.477Z",
     "artifact": "serverless-crud.zip"
   }
 }

@@ -1,5 +1,5 @@
 export class UserModel {
-	id: number = 0;
+	userId: string = "";
 	username: string = "";
 	email: string = "";
 	image: string = "";
@@ -9,5 +9,5 @@ export class UserModel {
 	total_donated: number = 0;
 	total_helpinhos_donated: number = 0;
 	total_helpinhos_created: number = 0;
-	createdAt: Date | null = null;
+	created_at: Date | null = null;
 }

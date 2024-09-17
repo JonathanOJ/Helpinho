@@ -22,15 +22,15 @@
 					<input type="text" pInputText [(ngModel)]="user.username" required placeholder="Como podemos lhe chamar" />
 
 					@if (!user.username && isInvalid) {
-					<label class="text-xs text-[#ff2637]"> Insira um email válido! </label>}
+					<label class="text-xs text-[#ff2637]"> Insira um e-mail válido! </label>}
 				</div>
 				}
 				<div class="flex flex-col gap-1.5">
-					<label class="text-sm text-[#4F4F4F]">Email</label>
-					<input type="text" pInputText [(ngModel)]="user.email" required placeholder="Seu melhor email" />
+					<label class="text-sm text-[#4F4F4F]">E-mail</label>
+					<input type="text" pInputText [(ngModel)]="user.email" required placeholder="Seu melhor e-mail" />
 
 					@if (!user.email && isInvalid) {
-					<label class="text-xs text-[#ff2637]"> Insira um email válido! </label>}
+					<label class="text-xs text-[#ff2637]"> Insira um e-mail válido! </label>}
 				</div>
 				@if(createUser){
 				<div class="flex gap-1.5 w-full">

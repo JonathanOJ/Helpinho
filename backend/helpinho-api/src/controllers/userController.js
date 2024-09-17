@@ -1,62 +1,107 @@
-// const userModel = require("../models/userModel");
 const userModel = require("../models/userModel");
 
-const findByEmail = async (request, response) => {
-  const { email } = request.params;
-
-  const user = await userModel.findByEmail(email);
-
-  if (!user) {
-    return response.status(404).json({ message: "User not found" });
-  }
-  return response.status(200).json(user);
-};
-
-const saveUser = async (request, response) => {
-  let user = {};
-
-  if (request.body.id && request.body.id > 0) {
-    user = await userModel.updateUser(request.body);
-  } else {
-    user = await userModel.createUser(request.body);
-  }
-  return response.status(200).json(user);
-};
-
-const signIn = async (request, response) => {
-  const user = await userModel.signIn(request.body);
-
-  if (!user) {
-    return response
-      .status(404)
-      .json({ message: "Email or password incorrects" });
-  }
-  return response.status(200).json(user);
-};
-
-const deleteUser = async (request, response) => {
-  const { id } = request.params;
-
-  const user = await userModel.deleteUser(id);
-
-  if (!user) {
-    return response.status(404).json({ message: "User not found" });
-  }
-  return response.status(200).json(user);
-};
-
-const updateUserHelpinhosCreated = async (id) => {
+// Find User by Email
+const findByEmail = async (req, res) => {
+  const { email } = req.params;
   try {
-    await userModel.updateUserHelpinhosCreated(id);
-    return;
+    const result = await userModel.findByEmail(email);
+    if (result.Items.length === 0) {
+      return res.status(404).json({ error: "User not found" });
+    }
+    res.status(200).json(result.Items[0]);
   } catch (error) {
-    console.error("Error updating helpinhos created:", error);
+    console.error(error);
+    res.status(500).json({ error: "Could not find user" });
+  }
+};
+
+const findById = async (req, res) => {
+  const { userId } = req.params;
+  try {
+    const result = await userModel.findById(userId);
+    if (result) {
+      return res.status(200).json(result);
+    } else {
+      return res.status(404).json({ error: "User not found" });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Could not fetch user" });
+  }
+};
+
+// User Sign In
+const signIn = async (req, res) => {
+  try {
+    const result = await userModel.signIn(req.body);
+
+    if (!result) {
+      return res.status(401).json({ error: "Invalid email or password" });
+    }
+
+    res.status(200).json(result);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Could not sign in" });
+  }
+};
+
+// Save or Update User
+const saveUser = async (req, res) => {
+  const { userId } = req.body;
+
+  if (userId) {
+    try {
+      const result = await userModel.updateUser(req.body);
+      res.status(200).json(result);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: "Could not update user" });
+    }
+  } else {
+    try {
+      const result = await userModel.createUser(req.body);
+      res.status(201).json(result);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: "Could not create user" });
+    }
+  }
+};
+
+// Update User Helpinhos Created
+const updateUserHelpinhosCreated = async (req, res) => {
+  const { userId } = req.params;
+
+  try {
+    const result = await userModel.updateUserHelpinhosCreated(userId);
+    res.status(200).json(result.Attributes);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Could not update user" });
+  }
+};
+
+// Delete User
+const deleteUser = async (req, res) => {
+  const { userId } = req.params;
+  try {
+    const result = await userModel.deleteUser(userId);
+    if (result.Attributes) {
+      res.status(200).json({ success: true });
+    } else {
+      res.status(404).json({ error: "User not found" });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Could not delete user" });
   }
 };
 
 module.exports = {
   updateUserHelpinhosCreated,
   findByEmail,
+  findById,
   saveUser,
   signIn,
   deleteUser,

@@ -21,6 +21,7 @@ export class HelpinhoCreateComponent implements OnChanges, OnDestroy {
 	activeStep: number = 0;
 	isInvalid: boolean = false;
 	categoriesFormatted: string = "";
+	loading: boolean = false;
 
 	onSaveSub: Subscription = new Subscription();
 	updateUserHelpinhosCreatedSub: Subscription = new Subscription();
@@ -78,7 +79,7 @@ export class HelpinhoCreateComponent implements OnChanges, OnDestroy {
 			this.categorys.map((c) => (c.selected = this.helpinho.category.includes(c.value)));
 			this.categoriesFormatted = this.helpinho.category.join(", ");
 
-			this.optionsValues.map((o) => (o.selected = o.value === this.helpinho.value));
+			this.optionsValues.map((o) => (o.selected = o.value === this.helpinho.value_required));
 		}
 	}
 
@@ -88,20 +89,20 @@ export class HelpinhoCreateComponent implements OnChanges, OnDestroy {
 	}
 
 	onSave() {
+		this.loading = true;
 		this.onSaveSub = this.api.saveHelpinho(this.helpinho).subscribe({
 			next: (resp: any) => {
-				this.updateUserHelpinhosCreatedSub = this.api
-					.updateUserHelpinhosCreated(this.helpinho.user_responsable.id)
-					.subscribe();
 				let user = JSON.parse(sessionStorage.getItem("user") || "{}");
-
 				user.total_helpinhos_created++;
 				localStorage.setItem("user", JSON.stringify(user));
+
 				this.onSaveEvent.emit(resp);
 				this.helpinho = new HelpinhoModel();
+				this.loading = false;
 				this.toastService.add({ severity: "success", summary: "", detail: "Helpinho salvo com sucesso!" });
 			},
 			error: () => {
+				this.loading = false;
 				this.toastService.add({ severity: "error", summary: "", detail: "Erro ao salvar helpinho!" });
 			},
 		});
@@ -117,7 +118,7 @@ export class HelpinhoCreateComponent implements OnChanges, OnDestroy {
 	}
 
 	handleValueSelected(option: any) {
-		this.helpinho.value = option.value;
+		this.helpinho.value_required = option.value;
 		this.optionsValues.map((o) => (o.selected = false));
 		option.selected = true;
 	}

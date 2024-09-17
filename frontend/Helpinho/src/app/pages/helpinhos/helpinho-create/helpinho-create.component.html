@@ -230,7 +230,12 @@
 					<p-button label="Cancelar" severity="danger" iconPos="right" (onClick)="onCancelEvent.emit()" />
 					<div class="flex justify-end gap-2">
 						<p-button label="Voltar" [outlined]="true" (onClick)="prevCallback.emit()" />
-						<p-button [disabled]="!helpinho.value" label="Continuar" iconPos="right" (onClick)="nextCallback.emit()" />
+						<p-button
+							[disabled]="!helpinho.value_required"
+							label="Continuar"
+							iconPos="right"
+							(onClick)="nextCallback.emit()"
+						/>
 					</div>
 				</section>
 			</section>
@@ -306,7 +311,7 @@
 							<span
 								class="w-full font-bold text-[#ec4899] flex items-center justify-center h-[80px] rounded-lg border-[#E7E7E7] border"
 							>
-								R$ {{ getValueFormatted(helpinho.value) }}
+								R$ {{ getValueFormatted(helpinho.value_required) }}
 							</span>
 						</div>
 						<div class="flex flex-col gap-1.5">
@@ -335,7 +340,7 @@
 					<p-button label="Cancelar" severity="danger" iconPos="right" (onClick)="onCancelEvent.emit()" />
 					<div class="flex justify-end gap-2">
 						<p-button label="Voltar" [outlined]="true" (onClick)="prevCallback.emit()" />
-						<p-button [label]="!helpinho.id ? 'Criar' : 'Salvar'" (onClick)="onSave()" />
+						<p-button [loading]="loading" [label]="!helpinho.helpinhoId ? 'Criar' : 'Salvar'" (onClick)="onSave()" />
 					</div>
 				</section>
 			</section>

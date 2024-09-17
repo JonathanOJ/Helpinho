@@ -88,7 +88,8 @@ export class LoginComponent implements OnInit, OnDestroy {
 
 		this.router.url === "/register" ? (this.createUser = true) : null;
 
-		sessionStorage.getItem("user") ? this.router.navigate(["/home"]) : null;
+		sessionStorage.getItem("userId") ? this.router.navigate(["/home"]) : null;
+		sessionStorage.removeItem("user");
 	}
 
 	ngOnDestroy(): void {
@@ -150,11 +151,15 @@ export class LoginComponent implements OnInit, OnDestroy {
 		this.loginSub = this.api.signIn(this.user).subscribe({
 			next: (response: any) => {
 				this.loading = false;
-				sessionStorage.setItem("user", JSON.stringify(response));
+
+				this.rememberUser ? sessionStorage.setItem("rememberUser", "true") : "";
+
+				sessionStorage.setItem("userId", response.userId);
+
 				this.router.navigate(["/home"]);
 			},
 			error: () => {
-				this.toastService.add({ severity: "error", summary: "", detail: "Email ou senha inválidos!" });
+				this.toastService.add({ severity: "error", summary: "", detail: "E-mail ou senha inválidos!" });
 				this.loading = false;
 			},
 		});
@@ -166,7 +171,10 @@ export class LoginComponent implements OnInit, OnDestroy {
 		this.api.saveUser(this.user).subscribe({
 			next: (response: any) => {
 				this.loading = false;
-				sessionStorage.setItem("user", JSON.stringify(response));
+				this.rememberUser ? sessionStorage.setItem("rememberUser", "true") : "";
+
+				sessionStorage.setItem("userId", response.userId);
+
 				this.router.navigate(["/home"]);
 			},
 			error: () => {

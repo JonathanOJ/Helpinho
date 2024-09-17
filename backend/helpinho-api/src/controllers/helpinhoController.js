@@ -1,92 +1,107 @@
 const helpinhoModel = require("../models/helpinhoModel");
 const userModel = require("../models/userModel");
 
-const searchHelpinhos = async (request, response) => {
+const findById = async (req, res) => {
   try {
-    const helpinhos = await helpinhoModel.searchHelpinho(request.body);
-    return response.status(200).json(helpinhos);
-  } catch (error) {
-    return response.status(500).json({ message: "Internal Server Error" });
-  }
-};
-
-const findById = async (request, response) => {
-  const { id } = request.params;
-
-  try {
-    const helpinho = await helpinhoModel.findById(id);
-
-    if (!helpinho) {
-      return response.status(404).json({ message: "Helpinho not found" });
-    }
-
-    return response.status(200).json(helpinho);
-  } catch (error) {
-    return response.status(500).json({ message: "Internal Server Error" });
-  }
-};
-
-const findAllByUser = async (request, response) => {
-  const { id } = request.params;
-
-  try {
-    const helpinhos = await helpinhoModel.findAllByUser(id);
-
-    return response.status(200).json(helpinhos);
-  } catch (error) {
-    return response.status(500).json({ message: "Internal Server Error" });
-  }
-};
-
-const sanitizeHelpinho = (body) => {
-  return {
-    id: body.id,
-    title: body.title,
-    description: body.description,
-    image: body.image,
-    category: body.category,
-    users_donated: body.users_donated,
-    value: body.value,
-    request_emergency: body.request_emergency,
-    emergency: body.emergency,
-    user_responsable: body.user_responsable,
-    created_at: body.created_at,
-  };
-};
-
-const saveHelpinho = async (request, response) => {
-  try {
-    const sanitizedBody = sanitizeHelpinho(request.body);
-    if (sanitizedBody.id) {
-      await helpinhoModel.updateHelpinho(sanitizedBody);
-      return response
-        .status(200)
-        .json({ message: "Helpinho updated successfully" });
+    const result = await helpinhoModel.findById(req.params.helpinhoId);
+    if (result) {
+      return res.status(200).json(result);
     } else {
-      const createdHelpinho = await helpinhoModel.createHelpinho(sanitizedBody);
-      return response.status(201).json(createdHelpinho);
+      return res.status(404).json({ error: "Helpinho not found" });
     }
   } catch (error) {
-    console.error(error); // Adiciona logging do erro para depuração
-    return response.status(500).json({ message: "Internal Server Error" });
+    console.error(error);
+    res.status(500).json({ error: "Could not fetch helpinho" });
   }
 };
 
-const deleteHelpinho = async (request, response) => {
-  const { id } = request.params;
+// Find All Helpinhos by User ID
+const findAllByUser = async (req, res) => {
+  const { userId } = req.params;
 
   try {
-    const deletedCount = await helpinhoModel.deleteHelpinho(id);
+    const result = await helpinhoModel.findAllByUser(userId);
+    res.status(200).json(result);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Could not fetch helpinhos by user" });
+  }
+};
 
-    if (deletedCount === 0) {
-      return response.status(404).json({ message: "Helpinho not found" });
+// Search Helpinhos
+const searchHelpinhos = async (req, res) => {
+  try {
+    const result = await helpinhoModel.searchHelpinho(req.body);
+    res.status(200).json(result);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Could not perform search" });
+  }
+};
+
+// Create or Update Helpinho
+const saveHelpinho = async (req, res) => {
+  try {
+    let result;
+    if (req.body.helpinhoId != "") {
+      result = await helpinhoModel.updateHelpinho(req.body);
+    } else {
+      result = await helpinhoModel.createHelpinho(req.body);
+
+      if (result.helpinhoId) {
+        await userModel.updateUserHelpinhosCreated(
+          req.body.user_responsable.userId
+        );
+      }
+    }
+    res.status(200).json(result.Attributes);
+  } catch (error) {
+    console.error(error);
+    res
+      .status(500)
+      .json({ error: "An error occurred while processing the request" });
+  }
+};
+
+// Delete Helpinho
+const deleteHelpinho = async (req, res) => {
+  const { helpinhoId } = req.params;
+  const helpinho = await helpinhoModel.findById(helpinhoId);
+
+  if (helpinho.value_donated > 0) {
+    return res.status(400).json({ error: "Helpinho contêm doações!" });
+  }
+
+  try {
+    const result = await helpinhoModel.deleteHelpinho(helpinhoId);
+    res.status(200).json({ success: result.Attributes ? true : false });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Could not delete helpinho" });
+  }
+};
+
+// Donate
+const donate = async (req, res) => {
+  try {
+    const result = await helpinhoModel.donate(req.body);
+
+    if (result) {
+      const userAlreadyDonated = result.users_donated.filter(
+        (user) => user.userId === req.body.userId
+      );
+
+      if (userAlreadyDonated.length === 1) {
+        await userModel.updateTotalHelpinhosDonated(req.body);
+      }
+
+      await userModel.updateTotalDonated(req.body);
     }
 
-    return response
-      .status(200)
-      .json({ message: "Helpinho deleted successfully" });
+    res.status(200).json(result.Attributes);
   } catch (error) {
-    return response.status(500).json({ message: "Internal Server Error" });
+    console.error(error);
+    res.status(500).json({ error: "Could not donate" });
   }
 };
 
@@ -96,4 +111,5 @@ module.exports = {
   findAllByUser,
   saveHelpinho,
   deleteHelpinho,
+  donate,
 };

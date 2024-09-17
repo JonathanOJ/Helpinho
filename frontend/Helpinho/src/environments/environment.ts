@@ -8,11 +8,9 @@
 // `ng build --env=prod` then `environment.prod.ts` will be used instead.
 // The list of which env maps to which file can be found in `.angular-cli.json`.
 
-import { servidor } from "../app/app.component";
-
 export const environment = {
 	production: false,
 
-	servidor: "http://localhost:8080",
-	// servidor: "https://jowfeta145.execute-api.us-east-1.amazonaws.com/",
+	// servidor: "http://localhost:8080",
+	servidor: "https://auh2es6d5m.execute-api.us-east-1.amazonaws.com",
 };
